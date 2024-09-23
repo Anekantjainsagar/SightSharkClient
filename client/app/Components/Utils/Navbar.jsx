@@ -1,11 +1,4 @@
-"use client";
-import Context from "@/app/Context/Context";
-import React, { useContext, useEffect } from "react";
-import { FaSearch } from "react-icons/fa";
-
 const Navbar = () => {
-  const { userData } = useContext(Context);
-
   return (
     <div className="text-white py-4 flex items-center justify-between w-full px-6">
       <h3 className="bigFont font-semibold">Hello, Rishabh</h3>

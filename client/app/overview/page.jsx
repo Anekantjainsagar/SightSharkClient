@@ -1,23 +1,16 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Leftbar from "@/app/Components/Utils/Leftbar";
 import Navbar from "@/app/Components/Utils/Navbar";
-import AddAgency from "@/app/Components/Agencies/AddAgency";
-import AgencySmallBlock from "@/app/Components/Agencies/AgencySmallBlock";
 import Image from "next/image";
-import { HiOutlineArrowNarrowRight } from "react-icons/hi";
-import Notify from "@/app/Components/Overview/Notify";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 
 const Overview = () => {
-  const [page, setPage] = useState(1);
-  const [addAgency, setAddAgency] = useState(false);
-  const history = useRouter();
+  // const history = useRouter();
 
   return (
     <div className="flex items-start h-[100vh]">
       <Leftbar />
-      <AddAgency showSubscribe={addAgency} setShowSubscribe={setAddAgency} />
       <div className="w-[85%] bg-main h-full relative">
         <div className="bg-newBubbleColor/10 w-[50vw] h-[30vh] absolute top-1/2 -translate-y-1/2 rounded-full"></div>
         <div className="bg-newBubbleColor/10 w-[20vw] h-[20vw] right-0 absolute top-3/6 rounded-full"></div>
@@ -31,23 +24,36 @@ const Overview = () => {
                 {[
                   {
                     img: "/Agency/individual/templates/1 (2).png",
+                    title: "Dashboard",
                   },
                   {
                     img: "/Agency/individual/templates/1 (1).png",
+                    title: "Dashboard",
                   },
-                  { img: "/Agency/individual/templates/1 (4).png" },
                   {
+                    img: "/Agency/individual/templates/1 (4).png",
+                    title: "Dashboard",
+                  },
+                  {
+                    title: "Dashboard",
                     img: "/Agency/individual/templates/1 (3).png",
                   },
                 ].map((e, i) => {
                   return (
-                    <div key={i}>
+                    <div
+                      key={i}
+                      className="border border-gray-500/20 p-3 rounded-2xl"
+                    >
                       <Image
                         src={e?.img}
                         alt={e?.img?.src}
                         width={1000}
                         height={1000}
+                        className="rounded-2xl"
                       />
+                      <h4 className="mainText18 text-center mt-2.5">
+                        {e?.title}
+                      </h4>
                     </div>
                   );
                 })}

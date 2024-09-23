@@ -2,14 +2,12 @@
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { CiGrid41, CiSettings, CiWallet } from "react-icons/ci";
+import { CiGrid41, CiSettings } from "react-icons/ci";
 import { IoIosHelpCircleOutline } from "react-icons/io";
-import { IoNewspaperOutline } from "react-icons/io5";
 import Cookies from "js-cookie";
 import HelpPage from "@/app/Components/Utils/HelpPage";
 
 const Leftbar = () => {
-  const history = useRouter();
   const [show, setShow] = useState(false);
   let mainRoutes = [
     {

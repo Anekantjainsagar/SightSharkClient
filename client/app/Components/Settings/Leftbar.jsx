@@ -85,14 +85,14 @@ const SettingsLeftbar = () => {
       <h4 className="mainLogoSize font-semibold">Settings</h4>
       <div className="mt-4">
         {items?.map((e, i) => {
-          return <Block e={e} key={i} idx={i} />;
+          return <Block e={e} key={i} />;
         })}
       </div>
     </div>
   );
 };
 
-const Block = ({ e, idx }) => {
+const Block = ({ e }) => {
   const pathname = usePathname();
   const history = useRouter();
 
