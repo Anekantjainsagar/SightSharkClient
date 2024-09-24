@@ -4,6 +4,9 @@ import RightSide from "@/app/Components/Login/RightSide";
 import { LuEye, LuEyeOff } from "react-icons/lu";
 import { useRouter } from "next/navigation";
 import { Toaster } from "react-hot-toast";
+// import axios from "axios";
+// import { BACKEND_URI } from "@/app/utils/url";
+// import Cookies from "js-cookie";
 // import Context from "./Context/Context";
 import Image from "next/image";
 

@@ -18,9 +18,9 @@ const Overview = () => {
         <div className="absolute backdrop-blur-3xl top-0 left-0 w-full h-full px-5 overflow-y-auto">
           <Navbar />
           <div className="text-white w-full px-6">
-            <div className="text-white w-full rounded-xl p-4 bg-[#171C2A]/20 border border-gray-500/5 mt-6">
+            <div className="text-white w-full rounded-xl p-3 min-[1600px]:p-4 bg-[#171C2A]/20 border border-gray-500/5 mt-6">
               <h3 className="text-[20px]">Dashboards</h3>
-              <div className="grid grid-cols-4 gap-x-4 mt-4">
+              <div className="grid grid-cols-4 gap-x-4 mt-3 min-[1600px]:mt-4">
                 {[
                   {
                     img: "/Agency/individual/templates/1 (2).png",
@@ -51,7 +51,7 @@ const Overview = () => {
                         height={1000}
                         className="rounded-2xl"
                       />
-                      <h4 className="mainText18 text-center mt-2.5">
+                      <h4 className="mainText18 font-medium text-center mt-2.5">
                         {e?.title}
                       </h4>
                     </div>

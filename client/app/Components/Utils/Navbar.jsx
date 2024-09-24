@@ -1,11 +1,17 @@
+"use client";
+
 const Navbar = () => {
   return (
     <div className="text-white py-4 flex items-center justify-between w-full px-6">
-      <h3 className="bigFont font-semibold">Hello, Rishabh</h3>
-      <div className="w-12 h-12 rounded-lg glass flex items-center justify-center border border-gray-200/5">
+      <div>
+        <h3 className="bigFont font-semibold">Hello, Rishabh</h3>
+        <p className="text-sm min-[1600px]:text-base text-[#85888E]">
+          Here’s your overview of the agencies
+        </p>
+      </div>
+      <div className="w-10 min-[1600px]:w-12 h-9 min-[1600px]:h-12 rounded-lg glass flex items-center justify-center border border-gray-200/5">
         <svg
-          width="24"
-          height="25"
+          className="w-5 min-[1600px]:w-6 h-5 min-[1600px]:h-6"
           viewBox="0 0 24 25"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
