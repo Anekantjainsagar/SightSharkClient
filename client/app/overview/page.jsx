@@ -1,12 +1,12 @@
 "use client";
-import React from "react";
+import React, { useContext } from "react";
 import Leftbar from "@/app/Components/Utils/Leftbar";
 import Navbar from "@/app/Components/Utils/Navbar";
 import Image from "next/image";
-// import { useRouter } from "next/navigation";
+import Context from "../Context/Context";
 
 const Overview = () => {
-  // const history = useRouter();
+  const { agency_templates } = useContext(Context);
 
   return (
     <div className="flex items-start h-[100vh]">
@@ -21,24 +21,7 @@ const Overview = () => {
             <div className="text-white w-full rounded-xl p-3 min-[1600px]:p-4 bg-[#171C2A]/20 border border-gray-500/5 mt-6">
               <h3 className="text-[20px]">Dashboards</h3>
               <div className="grid grid-cols-4 gap-x-4 mt-3 min-[1600px]:mt-4">
-                {[
-                  {
-                    img: "/Agency/individual/templates/1 (2).png",
-                    title: "Dashboard",
-                  },
-                  {
-                    img: "/Agency/individual/templates/1 (1).png",
-                    title: "Dashboard",
-                  },
-                  {
-                    img: "/Agency/individual/templates/1 (4).png",
-                    title: "Dashboard",
-                  },
-                  {
-                    title: "Dashboard",
-                    img: "/Agency/individual/templates/1 (3).png",
-                  },
-                ].map((e, i) => {
+                {agency_templates?.map((e, i) => {
                   return (
                     <div
                       key={i}

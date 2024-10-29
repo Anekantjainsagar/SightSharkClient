@@ -3,6 +3,8 @@ import Modal from "react-modal";
 import Image from "next/image";
 import { AiOutlineClose } from "react-icons/ai";
 import { Toaster } from "react-hot-toast";
+import { useContext } from "react";
+import Context from "@/app/Context/Context";
 
 const customStyles = {
   overlay: { zIndex: 50 },
@@ -19,6 +21,7 @@ const customStyles = {
 };
 
 const HelpPage = ({ showSubscribe, setShowSubscribe }) => {
+  const { userData } = useContext(Context);
   function closeModal() {
     setShowSubscribe(false);
   }
@@ -56,15 +59,17 @@ const HelpPage = ({ showSubscribe, setShowSubscribe }) => {
           <button
             className={`bg-newBlue w-full py-2 rounded-lg text-sm min-[1600px]:text-base text-center`}
             onClick={() => {
-              window.navigator.clipboard.writeText("info@prowiz.io");
+              window.navigator.clipboard.writeText(
+                userData?.data?.email_address
+              );
               window.open(
-                "https://mail.google.com/mail/u/0/#inbox?compose=CllgCJvqrzHxdSbzTnJJBXPfCsstgGRGnmLrfzcjZFXvQKpdJcpmlSFFLjRjSGkdzXWrwfdDhbB",
+                "https://mail.google.com/mail/u/0/#inbox?compose=new",
                 "__blank"
               );
               setShowSubscribe(!showSubscribe);
             }}
           >
-            info@prowiz.io
+            {userData?.data?.email_address}
           </button>{" "}
         </div>
       </Modal>
