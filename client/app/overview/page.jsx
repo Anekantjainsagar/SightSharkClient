@@ -23,21 +23,26 @@ const Overview = () => {
               <div className="grid grid-cols-4 gap-x-4 mt-3 min-[1600px]:mt-4">
                 {agency_templates?.map((e, i) => {
                   return (
-                    <div
-                      key={i}
-                      className="border border-gray-500/20 p-3 rounded-2xl"
-                    >
-                      <Image
-                        src={e?.img}
-                        alt={e?.img?.src}
-                        width={1000}
-                        height={1000}
-                        className="rounded-2xl"
-                      />
-                      <h4 className="mainText18 font-medium text-center mt-2.5">
-                        {e?.title}
-                      </h4>
-                    </div>
+                    e?.template_image && (
+                      <div
+                        key={i}
+                        className="border border-gray-500/20 p-3 rounded-2xl cursor-pointer"
+                        onClick={() => {
+                          window.open(e?.template_link, "__blank");
+                        }}
+                      >
+                        <Image
+                          src={e?.template_image}
+                          alt={e?.template_image?.src}
+                          width={1000}
+                          height={1000}
+                          className="rounded-2xl"
+                        />
+                        <h4 className="mainText18 font-medium text-center mt-2.5">
+                          {e?.template_name}
+                        </h4>
+                      </div>
+                    )
                   );
                 })}
               </div>
