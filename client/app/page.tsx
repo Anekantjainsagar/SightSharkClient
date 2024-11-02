@@ -8,7 +8,7 @@ import { BACKEND_URI } from "./utils/url";
 import LoginOtp from "@/app/Components/LoginOtp";
 import { getCookie } from "cookies-next";
 import axios from "axios";
-
+ 
 const App = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
