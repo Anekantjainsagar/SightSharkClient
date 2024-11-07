@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { CiGrid41, CiSettings } from "react-icons/ci";
 import { IoIosHelpCircleOutline } from "react-icons/io";
