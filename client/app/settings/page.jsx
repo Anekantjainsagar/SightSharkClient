@@ -1,18 +1,79 @@
 "use client";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Leftbar from "@/app/Components/Utils/Leftbar";
 import Navbar from "@/app/Components/Utils/Navbar";
 import SettingsLeftbar from "@/app/Components/Settings/Leftbar";
+import { BACKEND_URI } from "../utils/url";
+import { getCookie } from "cookies-next";
+import Context from "../Context/Context";
+import toast from "react-hot-toast";
 
 const Settings = () => {
+  const { userData, checkToken } = useContext(Context);
   const [data, setData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     phone: "",
     country: "",
-    postal: "",
+    postal_code: "",
   });
+
+  useEffect(() => {
+    setData({
+      firstName: userData?.client_name?.split(" ")[0],
+      lastName: userData?.client_name?.split(" ")[1],
+      email: userData?.email_address
+        ? userData?.email_address
+        : userData?.phone,
+      phone: userData?.key_contact_phone,
+      ...userData,
+    });
+  }, [userData]);
+
+  const updateUsers = () => {
+    if (data?.firstName && data?.lastName && data?.email) {
+      const queryParams = new URLSearchParams({
+        ...userData,
+        email: data?.email,
+        password: data?.password,
+        first_name: data?.firstName,
+        last_name: data?.lastName,
+        phone: data?.phone || "",
+      }).toString();
+
+      try {
+        fetch(`${BACKEND_URI}/client/update?${queryParams}`, {
+          headers: {
+            Accept:
+              "application/json, application/xml, text/plain, text/html, *.*",
+            Authorization: `Bearer ${getCookie("token")}`,
+            method: JSON.stringify({ user_id: userData?.user_id }),
+          },
+          method: "PUT",
+        })
+          .then((res) => {
+            return res.json();
+          })
+          .then((res) => {
+            if (res.msg) {
+              toast.success("User updated successfully");
+              checkToken();
+            }
+            if (res.detail) {
+              toast.error(res.detail);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      toast.error("Please fill all the details");
+    }
+  };
 
   return (
     <div className="flex items-start h-[100vh]">
@@ -106,55 +167,23 @@ const Settings = () => {
                       placeholder="Enter Phone"
                       className="glass outline-none border border-gray-500/5 px-4 py-2 rounded-md text-sm min-[1600px]:text-base"
                     />
-                  </div>{" "}
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="country"
-                      className="mb-1.5 text-sm min-[1600px]:text-base"
-                    >
-                      Country
-                    </label>
-                    <input
-                      id="country"
-                      value={data?.country}
-                      onChange={(e) => {
-                        setData({ ...data, country: e.target.value });
-                      }}
-                      type="country"
-                      placeholder="Enter Country"
-                      className="glass outline-none border border-gray-500/5 px-4 py-2 rounded-md text-sm min-[1600px]:text-base"
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="postal"
-                      className="mb-1.5 text-sm min-[1600px]:text-base"
-                    >
-                      Postal Code
-                    </label>
-                    <input
-                      id="postal"
-                      value={data?.postal}
-                      onChange={(e) => {
-                        setData({ ...data, postal: e.target.value });
-                      }}
-                      type="number"
-                      placeholder="Enter Postal Code"
-                      className="glass outline-none border border-gray-500/5 px-4 py-2 rounded-md text-sm min-[1600px]:text-base"
-                    />
                   </div>
                 </div>
               </div>
               <div className="mt-10 flex items-center justify-end w-full">
                 <button
                   className={`bg-[#898989]/15 font-semibold min-[1600px]:w-[160px] w-[120px] min-[1600px]:py-3 py-2 min-[1600px]:text-base text-sm rounded-xl ml-4`}
-                  onClick={() => {}}
+                  onClick={() => {
+                    history.push("/overview");
+                  }}
                 >
                   Discard
                 </button>
                 <button
                   className={`bg-newBlue font-semibold min-[1600px]:w-[160px] w-[120px] min-[1600px]:py-3 py-2 min-[1600px]:text-base text-sm rounded-xl ml-4`}
-                  onClick={() => {}}
+                  onClick={() => {
+                    updateUsers();
+                  }}
                 >
                   Save
                 </button>

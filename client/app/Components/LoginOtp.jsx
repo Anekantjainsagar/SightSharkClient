@@ -38,7 +38,7 @@ const LoginOtp = ({ showSubscribe, setShowSubscribe, email }) => {
       try {
         axios
           .post(
-            `${BACKEND_URI}/client/auth/verify-otp`,
+            `${BACKEND_URI}//client/auth/verify-otp`,
             { email: email.toLowerCase(), otp: parseInt(otpVal) },
             {
               headers: {
@@ -85,45 +85,55 @@ const LoginOtp = ({ showSubscribe, setShowSubscribe, email }) => {
               closeModal();
             }}
           />
-          <h4 className="mainText20 w-11/12 text-center mb-5 mt-5">
-            Enter Otp for Verification
-          </h4>
-          <OtpInput
-            value={otpVal}
-            onChange={(val) => {
-              setOtpVal(val);
-            }}
-            className="w-full border-3 px-3 text-2xl py-1.5 outline-none rounded-md mb-4"
-            numInputs={6}
-            renderSeparator={<span></span>}
-            renderInput={(props) => <input {...props} />}
-            separator={<span style={{ width: "8px" }}></span>}
-            isInputNum={true}
-            shouldAutoFocus={true}
-            inputType="number"
-            inputStyle={{
-              border: "1px solid transparent",
-              borderRadius: "8px",
-              width: "54px",
-              height: "54px",
-              fontSize: "20px",
-              color: "#000",
-              caretColor: "blue",
-              marginRight: "5px",
-            }}
-            focusStyle={{
-              border: "1px solid #aeafb0",
-              outline: "none",
-            }}
-          />
-          <button
-            className={`bg-newBlue w-full py-2 mt-5 rounded-lg text-sm min-[1600px]:text-base text-center`}
-            onClick={() => {
-              onCheckOtp();
-            }}
-          >
-            Submit
-          </button>{" "}
+          <div className="flex flex-col items-center">
+            <h4 className="mainText20 w-11/12 text-center mb-1 mt-5">
+              Enter Otp for Verification
+            </h4>
+            <p className="w-11/12 mx-auto text-center mb-5">
+              Please enter the OTP (One-Time Password) sent to your registered
+              email/phone number to complete your verification.
+            </p>
+            <OtpInput
+              value={otpVal}
+              onChange={(val) => {
+                setOtpVal(val);
+              }}
+              className="w-full border-3 px-3 text-2xl py-1.5 outline-none rounded-md mb-4"
+              numInputs={6}
+              renderSeparator={<span></span>}
+              renderInput={(props) => <input {...props} />}
+              separator={<span style={{ width: "8px" }}></span>}
+              isInputNum={true}
+              shouldAutoFocus={true}
+              inputType="number"
+              inputStyle={{
+                border: "1px solid transparent",
+                borderRadius: "8px",
+                width: "54px",
+                height: "54px",
+                fontSize: "20px",
+                color: "#000",
+                caretColor: "blue",
+                marginRight: "5px",
+              }}
+              focusStyle={{
+                border: "1px solid #aeafb0",
+                outline: "none",
+              }}
+            />
+            <div className="flex items-center justify-end w-full mt-2">
+              <p>
+                Didn&apos;t received the code?{" "}
+                <span className="text-newBlue cursor-pointer">Resend Code</span>
+              </p>
+            </div>
+            <button
+              onClick={onCheckOtp}
+              className={`bg-newBlue w-full py-2 mt-5 rounded-lg text-sm min-[1600px]:text-base text-center`}
+            >
+              Verify
+            </button>
+          </div>
         </div>
       </Modal>
     </div>

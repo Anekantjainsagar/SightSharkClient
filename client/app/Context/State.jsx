@@ -22,7 +22,7 @@ const State = (props) => {
             },
           })
           .then((res) => {
-            setUserData(res.data);
+            setUserData(res.data.data);
           })
           .catch((err) => {
             console.log(err);
