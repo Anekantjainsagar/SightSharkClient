@@ -4,9 +4,9 @@ steps:
       [
         "build",
         "--build-arg",
-        "NEXT_PUBLIC_ADMIN_BACKEND_URI=${_ADMIN_PORTAL_URL}",
+        "NEXT_PUBLIC_ADMIN_BACKEND_URI=${_NEXT_PUBLIC_ADMIN_BACKEND_URI}",
         "--build-arg",
-        "NEXT_PUBLIC_BACKEND_URI=${_AGENCY_PORTAL_URL}",
+        "NEXT_PUBLIC_BACKEND_URI=${_NEXT_PUBLIC_BACKEND_URI}",
         "-t",
         "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/client-portal:latest",
         ".",
