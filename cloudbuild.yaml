@@ -1,0 +1,45 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "--build-arg",
+        "NEXT_PUBLIC_ADMIN_BACKEND_URI=${_ADMIN_PORTAL_URL}",
+        "--build-arg",
+        "NEXT_PUBLIC_BACKEND_URI=${_AGENCY_PORTAL_URL}",
+        "-t",
+        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/client-portal:latest",
+        ".",
+      ]
+
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/client-portal:latest"]
+
+
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
+    args:
+      [
+        "run",
+        "deploy",
+        "client-portal",
+        "--image",
+        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/client-portal:latest",
+        "--region",
+        "${_REGION}",
+        "--platform",
+        "managed",
+        "--port",
+        "3000",
+        "--cpu",
+        "1",
+        "--memory",
+        "512Mi",
+        "--allow-unauthenticated",
+        "--max-instances",
+        "10",  
+        "--timeout",
+        "300s",
+      ]
+images:
+  - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/client-portal:latest"
