@@ -11,6 +11,7 @@ steps:
         "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/client-portal:latest",
         ".",
       ]
+      
 
   - name: "gcr.io/cloud-builders/docker"
     args: ["push", "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/client-portal:latest"]
