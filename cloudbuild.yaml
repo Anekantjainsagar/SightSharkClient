@@ -43,7 +43,6 @@ steps:
         "300s",
       ]
 
-serviceAccount: ${_CLOUD_RUN_SERVICE_ACCOUNT}
 options:
   logging: CLOUD_LOGGING_ONLY
 images:
