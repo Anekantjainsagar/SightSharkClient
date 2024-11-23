@@ -6,17 +6,13 @@ import toast, { Toaster } from "react-hot-toast";
 import Image from "next/image";
 import { BACKEND_URI } from "./utils/url";
 import LoginOtp from "@/app/Components/LoginOtp";
-<<<<<<< HEAD:client/app/page.jsx
 import PasswordReset from "./Components/PasswordReset";
 import { useRouter } from "next/navigation";
 import Context from "./Context/Context";
 import { setCookie } from "cookies-next";
-
-=======
 import { getCookie } from "cookies-next";
 import axios from "axios";
- 
->>>>>>> e7c045522ce59f6b0569a12a4a125fd94e05b741:client/app/page.tsx
+
 const App = () => {
   const history = useRouter();
   const { checkToken } = useContext(Context);
