@@ -10,8 +10,6 @@ import PasswordReset from "./Components/PasswordReset";
 import { useRouter } from "next/navigation";
 import Context from "./Context/Context";
 import { setCookie } from "cookies-next";
-import { getCookie } from "cookies-next";
-import axios from "axios";
 
 const App = () => {
   const history = useRouter();
