@@ -1,13 +1,10 @@
 "use client";
 import Context from "@/app/Context/Context";
-import Image from "next/image";
-import React, { useContext, useState } from "react";
-import { AiOutlineClose } from "react-icons/ai";
+import React, { useContext } from "react";
 import { FaSearch } from "react-icons/fa";
 
 const Navbar = () => {
   const { userData } = useContext(Context);
-  const [showNotifications, setShowNotifications] = useState(false);
 
   return (
     <div className="text-white py-4 flex items-center justify-between w-full px-6">
