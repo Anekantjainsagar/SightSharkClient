@@ -6,19 +6,20 @@ import toast, { Toaster } from "react-hot-toast";
 import Image from "next/image";
 import { BACKEND_URI } from "./utils/url";
 import LoginOtp from "@/app/Components/LoginOtp";
-import PasswordReset from "./Components/PasswordReset";
-import { useRouter } from "next/navigation";
+import { getCookie, setCookie } from "cookies-next";
+import axios from "axios";
 import Context from "./Context/Context";
-import { setCookie } from "cookies-next";
+import { useRouter } from "next/navigation";
+import PasswordReset from "@/app/Components/PasswordReset";
 
 const App = () => {
   const history = useRouter();
-  const { checkToken } = useContext(Context);
+  const [recoverPassword, setRecoverPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [user, setUser] = useState({ password: "", email: "" });
   const [showOtp, setShowOtp] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const [recoverPassword, setRecoverPassword] = useState(false);
+  const { checkToken } = useContext(Context);
 
   const handleRememberMe = () => {
     localStorage.setItem("email", user?.email);
@@ -29,10 +30,9 @@ const App = () => {
     if (localStorage.getItem("email")) {
       setRememberMe(true);
     }
-    setUser({
-      email: localStorage.getItem("email"),
-      password: localStorage.getItem("password"),
-    });
+    let email = localStorage.getItem("email");
+    let password = localStorage.getItem("password");
+    setUser({ email, password });
   }, []);
 
   const onLogin = () => {
@@ -70,7 +70,6 @@ const App = () => {
             }
           })
           .catch((err) => {
-            console.log(err);
             if (err.status == 401) {
               toast.error("Invalid credentials");
             }
@@ -86,14 +85,14 @@ const App = () => {
   return (
     <div className="bg-[#091022] w-full flex items-start justify-between h-[100vh]">
       <Toaster />{" "}
+      <PasswordReset
+        showSubscribe={recoverPassword}
+        setShowSubscribe={setRecoverPassword}
+      />
       <LoginOtp
         showSubscribe={showOtp}
         setShowSubscribe={setShowOtp}
         email={user?.email}
-      />{" "}
-      <PasswordReset
-        showSubscribe={recoverPassword}
-        setShowSubscribe={setRecoverPassword}
       />
       <div className="w-7/12 p-[2vw] flex flex-col items-center justify-center h-full">
         <div className="text-white flex flex-col items-center w-7/12 px-5">
@@ -112,14 +111,12 @@ const App = () => {
           <h1 className="text-3xl min-[1600px]:text-[40px] font-semibold">
             Welcome Back
           </h1>
-          <p className="mainText18 text-white/80 mt-2">
-            Login into your account
-          </p>
+          <p className="mainText18 text-white/80 mt-2">Login to your account</p>
           <div className="w-11/12 min-[1600px]:mt-4">
             <div className="flex flex-col mt-5 min-[1600px]:mt-10 mb-3 min-[1600px]:mb-6">
               <label
                 htmlFor="email"
-                className="mb-1.5 text-sm min-[1600px]:text-base"
+                className="mb-1.5 text-sm min-[1600px]:text-base w-fit relative"
               >
                 Email
               </label>
@@ -200,7 +197,7 @@ const App = () => {
                 }}
                 className="text-[#F04438] mainText18"
               >
-                Recover Password
+                Forgot Password
               </button>
             </div>
             <button
@@ -219,7 +216,15 @@ const App = () => {
               <div className="line w-full h-[1px] bg-[#343745]"></div>
             </div>
             <div className="items-stretch flex flex-col gap-y-3">
-              <button className="w-full bg-[#898989]/15 rounded-[10px] flex items-center justify-center h-12">
+              <button
+                onClick={() => {
+                  window.open(`${BACKEND_URI}/auth/google/login`, "__blank");
+                  // axios.get(`${BACKEND_URI}/auth/google/login`).then((res) => {
+                  //   console.log(res);
+                  // });
+                }}
+                className="w-full bg-[#898989]/15 rounded-[10px] flex items-center justify-center h-12"
+              >
                 <Image
                   src="/login/google.png"
                   width={1000}
@@ -229,7 +234,12 @@ const App = () => {
                 />
                 <p>Sign in with Google</p>
               </button>
-              <button className="w-full bg-[#898989]/15 rounded-[10px] flex items-center justify-center h-12">
+              <button
+                onClick={() => {
+                  window.open(`${BACKEND_URI}/auth/facebook/login`, "__blank");
+                }}
+                className="w-full bg-[#898989]/15 rounded-[10px] flex items-center justify-center h-12"
+              >
                 <Image
                   src="/login/facebook.png"
                   width={1000}

@@ -1,5 +1,4 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -12,7 +11,7 @@ const Leftbar = () => {
   const [show, setShow] = useState(false);
   let mainRoutes = [
     {
-      title: "Overview",
+      title: "Dashboards",
       icon: <CiGrid41 className="text-2xl" key={"1"} />,
       route: "/overview",
       temp_icon: [
