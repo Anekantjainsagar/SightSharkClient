@@ -9,18 +9,22 @@ import Context from "@/app/Context/Context";
 import { getCookie } from "cookies-next";
 import { BACKEND_URI } from "@/app/utils/url";
 import toast from "react-hot-toast";
+import Info from "../../Components/Login/Info";
 import axios from "axios";
 
 const Settings = () => {
-  const { userData, setUserData } = useContext(Context);
+  const { userData, setUserData, checkPasswordCriteria } = useContext(Context);
   const [showOriginalPassword, setShowOriginalPassword] = useState(false);
   const [twoFactorAuth, setTwoFactorAuth] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showNewPasswordC, setShowNewPasswordC] = useState(false);
   const [data, setData] = useState({
     oldPass: "",
     newPassword: "",
     reNewPassword: "",
   });
+  const criteria_old = checkPasswordCriteria(data?.newPassword);
+  const criteria = checkPasswordCriteria(data?.oldPass);
 
   useEffect(() => {
     if (userData?.two_factor_authentication) {
@@ -30,28 +34,30 @@ const Settings = () => {
 
   const toggle2factorAuth = (checked) => {
     let cookie = getCookie("token");
-    setTwoFactorAuth(!twoFactorAuth);
-
     if (cookie && userData?.client_id) {
       axios
         .put(
-          `${BACKEND_URI}/client/two-factor-authentication?client_id=${
-            userData?.client_id
-          }&two_factor_authentication=${checked ? "enabled" : "disabled"}`,
+          `${BACKEND_URI}/client/two-factor-authentication?client_id=${userData?.client_id.trim()}&two_factor_authentication=${
+            checked ? "enabled" : "disabled"
+          }`,
+          {}, // empty object for the data (payload) since it's a PUT without a body
           {
             headers: {
-              Accept: "application/x-www-form-urlencoded",
-              "Content-Type": "application/x-www-form-urlencoded",
+              Accept: "application/json",
               Authorization: `Bearer ${cookie}`,
             },
           }
         )
         .then((res) => {
-          if (res.data.data.id) {
+          if (res.status === 200) {
+            // Update state after the successful response
             setUserData({
               ...userData,
               two_factor_authentication: checked ? "enabled" : "disabled",
             });
+            setTwoFactorAuth(checked); // update local state
+
+            // Show success message
             if (checked) {
               toast.success("Two Factor Authentication Enabled");
             } else {
@@ -60,7 +66,8 @@ const Settings = () => {
           }
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err);
+          toast.error("Error enabling/disabling Two Factor Authentication");
         });
     } else {
       toast.error("Login Error");
@@ -91,9 +98,10 @@ const Settings = () => {
                     <div className="flex flex-col">
                       <label
                         htmlFor="currentPass"
-                        className="mb-1.5 text-sm min-[1600px]:text-base"
+                        className="mb-1.5 text-sm min-[1600px]:text-base w-fit relative"
                       >
-                        Current Password <Required />
+                        Current Password <Required />{" "}
+                        <Info text="Current Password" />
                       </label>
                       <div className="w-full relative mt-1">
                         <input
@@ -108,23 +116,63 @@ const Settings = () => {
                           }
                         />
                         <div
-                          className="absolute top-1/2 -translate-y-1/2 text-white right-5 min-[1600px]:text-2xl text-gl cursor-pointer"
+                          className="absolute z-50 top-1/2 -translate-y-1/2 text-white right-5 min-[1600px]:text-2xl text-gl cursor-pointer"
                           onClick={(e) => {
-                            e.preventDefault();
                             setShowOriginalPassword(!showOriginalPassword);
                           }}
                         >
                           {showOriginalPassword ? <LuEye /> : <LuEyeOff />}
                         </div>
+                      </div>{" "}
+                      <div className="text-sm mt-2">
+                        <p
+                          className={
+                            criteria.hasUppercase
+                              ? "text-green-500"
+                              : "text-red-500"
+                          }
+                        >
+                          {criteria.hasUppercase ? "✔" : "✘"} At least one
+                          uppercase letter
+                        </p>
+                        <p
+                          className={
+                            criteria.hasLowercase
+                              ? "text-green-500"
+                              : "text-red-500"
+                          }
+                        >
+                          {criteria.hasLowercase ? "✔" : "✘"} At least one
+                          lowercase letter
+                        </p>
+                        <p
+                          className={
+                            criteria.hasNumber
+                              ? "text-green-500"
+                              : "text-red-500"
+                          }
+                        >
+                          {criteria.hasNumber ? "✔" : "✘"} At least one number
+                        </p>
+                        <p
+                          className={
+                            criteria.hasSpecialChar
+                              ? "text-green-500"
+                              : "text-red-500"
+                          }
+                        >
+                          {criteria.hasSpecialChar ? "✔" : "✘"} At least one
+                          special character
+                        </p>
                       </div>
                     </div>
                     <div className="flex flex-col">
                       <label
                         htmlFor="newPass"
-                        className="mb-1.5 text-sm min-[1600px]:text-base"
+                        className="mb-1.5 text-sm min-[1600px]:text-base w-fit relative"
                       >
                         New Password
-                        <Required />
+                        <Required /> <Info text="New Password" />
                       </label>
                       <div className="w-full relative mt-1">
                         <input
@@ -139,44 +187,85 @@ const Settings = () => {
                           }
                         />
                         <div
-                          className="absolute top-1/2 -translate-y-1/2 text-white right-5 min-[1600px]:text-2xl text-gl cursor-pointer"
+                          className="absolute z-50 top-1/2 -translate-y-1/2 text-white right-5 min-[1600px]:text-2xl text-gl cursor-pointer"
                           onClick={(e) => {
-                            e.preventDefault();
                             setShowNewPassword(!showNewPassword);
                           }}
                         >
                           {showNewPassword ? <LuEye /> : <LuEyeOff />}
                         </div>
+                      </div>{" "}
+                      <div className="text-sm mt-2">
+                        <p
+                          className={
+                            criteria_old.hasUppercase
+                              ? "text-green-500"
+                              : "text-red-500"
+                          }
+                        >
+                          {criteria_old.hasUppercase ? "✔" : "✘"} At least one
+                          uppercase letter
+                        </p>
+                        <p
+                          className={
+                            criteria_old.hasLowercase
+                              ? "text-green-500"
+                              : "text-red-500"
+                          }
+                        >
+                          {criteria_old.hasLowercase ? "✔" : "✘"} At least one
+                          lowercase letter
+                        </p>
+                        <p
+                          className={
+                            criteria_old.hasNumber
+                              ? "text-green-500"
+                              : "text-red-500"
+                          }
+                        >
+                          {criteria_old.hasNumber ? "✔" : "✘"} At least one
+                          number
+                        </p>
+                        <p
+                          className={
+                            criteria_old.hasSpecialChar
+                              ? "text-green-500"
+                              : "text-red-500"
+                          }
+                        >
+                          {criteria.hasSpecialChar ? "✔" : "✘"} At least one
+                          special character
+                        </p>
                       </div>
                     </div>{" "}
                     <div className="flex flex-col">
                       <label
                         htmlFor="retypeNewPassword"
-                        className="mb-1.5 text-sm min-[1600px]:text-base"
+                        className="mb-1.5 text-sm min-[1600px]:text-base w-fit relative"
                       >
-                        Retype New Password
+                        Confirm New Password
                         <Required />
+                        <Info text="Confirmed New Password" />
                       </label>
                       <div className="w-full relative mt-1">
                         <input
-                          type={showNewPassword ? "text" : "password"}
+                          type={showNewPasswordC ? "text" : "password"}
                           name="Password"
                           id="retypeNewPassword"
                           className="glass outline-none border border-gray-500/5 px-4 py-2 rounded-md w-full min-[1600px]:text-base text-sm"
-                          placeholder="Your New Password"
+                          placeholder="Your Confirm New Password"
                           value={data?.reNewPassword}
                           onChange={(e) =>
                             setData({ ...data, reNewPassword: e.target.value })
                           }
                         />
                         <div
-                          className="absolute top-1/2 -translate-y-1/2 text-white right-5 min-[1600px]:text-2xl text-gl cursor-pointer"
+                          className="absolute z-50 top-1/2 -translate-y-1/2 text-white right-5 min-[1600px]:text-2xl text-gl cursor-pointer"
                           onClick={(e) => {
-                            e.preventDefault();
-                            setShowNewPassword(!showNewPassword);
+                            setShowNewPasswordC(!showNewPasswordC);
                           }}
                         >
-                          {showNewPassword ? <LuEye /> : <LuEyeOff />}
+                          {showNewPasswordC ? <LuEye /> : <LuEyeOff />}
                         </div>
                       </div>
                     </div>
@@ -199,8 +288,8 @@ const Settings = () => {
                       value=""
                       className="sr-only peer"
                       checked={twoFactorAuth}
-                      onChange={(e) => {
-                        toggle2factorAuth(e.target.checked);
+                      onChange={() => {
+                        setTwoFactorAuth(!twoFactorAuth);
                       }}
                     />
                     <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
@@ -210,13 +299,27 @@ const Settings = () => {
               <div className="mt-10 flex items-center justify-end w-full">
                 <button
                   className={`bg-[#898989]/15 font-semibold min-[1600px]:w-[160px] w-[120px] min-[1600px]:py-3 py-2 min-[1600px]:text-base text-sm rounded-xl ml-4`}
-                  onClick={() => {}}
+                  onClick={() => {
+                    setData({
+                      oldPass: "",
+                      newPassword: "",
+                      reNewPassword: "",
+                    });
+                    if (userData?.two_factor_authentication) {
+                      setTwoFactorAuth(
+                        userData?.two_factor_authentication !== "disabled"
+                      );
+                    }
+                    toast.success("Changes discarded");
+                  }}
                 >
                   Discard
                 </button>
                 <button
                   className={`bg-newBlue font-semibold min-[1600px]:w-[160px] w-[120px] min-[1600px]:py-3 py-2 min-[1600px]:text-base text-sm rounded-xl ml-4`}
-                  onClick={() => {}}
+                  onClick={() => {
+                    toggle2factorAuth(twoFactorAuth);
+                  }}
                 >
                   Save
                 </button>

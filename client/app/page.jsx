@@ -62,9 +62,9 @@ const App = () => {
               setCookie("token", res.access_token);
               checkToken();
               history.push("/overview");
-              toast.success("Login Successfully");
+              toast.success("Logged in successfully");
             } else {
-              toast.success("Login Successfully check otp for verification");
+              toast.success("OTP sent to your registered email address");
               setShowOtp(true);
             }
           })
@@ -232,21 +232,6 @@ const App = () => {
                   className="w-5 aspect-square mr-3"
                 />
                 <p>Sign in with Google</p>
-              </button>
-              <button
-                onClick={() => {
-                  window.open(`${BACKEND_URI}/auth/facebook/login`, "__blank");
-                }}
-                className="w-full bg-[#898989]/15 rounded-[10px] flex items-center justify-center h-12"
-              >
-                <Image
-                  src="/login/facebook.png"
-                  width={1000}
-                  height={1000}
-                  alt="Facebook icon"
-                  className="w-5 aspect-square mr-3"
-                />
-                <p>Sign in with Facebook</p>
               </button>
             </div>
           </div>

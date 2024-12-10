@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { CiGrid41, CiSettings } from "react-icons/ci";
+import { CiGrid41, CiSettings, CiWallet } from "react-icons/ci";
 import { IoIosHelpCircleOutline } from "react-icons/io";
 import Cookies from "js-cookie";
 import HelpPage from "@/app/Components/Utils/HelpPage";
@@ -84,6 +84,46 @@ const Leftbar = () => {
           />
           <path
             d="M8.4 13.9991H4.6C4.03995 13.9991 3.75992 13.9991 3.54601 14.1081C3.35785 14.204 3.20487 14.357 3.10899 14.5452C3 14.7591 3 15.0391 3 15.5991V19.3991C3 19.9592 3 20.2392 3.10899 20.4531C3.20487 20.6413 3.35785 20.7943 3.54601 20.8902C3.75992 20.9991 4.03995 20.9991 4.6 20.9991H8.4C8.96005 20.9991 9.24008 20.9991 9.45399 20.8902C9.64215 20.7943 9.79513 20.6413 9.89101 20.4531C10 20.2392 10 19.9592 10 19.3991V15.5991C10 15.0391 10 14.7591 9.89101 14.5452C9.79513 14.357 9.64215 14.204 9.45399 14.1081C9.24008 13.9991 8.96005 13.9991 8.4 13.9991Z"
+            stroke="white"
+            strokeOpacity="0.64"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>,
+      ],
+    },
+    {
+      title: "Users",
+      icon: <CiWallet className="text-2xl" />,
+      route: "/users",
+      temp_icon: [
+        <svg
+          width="22"
+          height="20"
+          viewBox="0 0 22 20"
+          fill="none"
+          key={1}
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M21 19V17C21 15.1362 19.7252 13.5701 18 13.126M14.5 1.29076C15.9659 1.88415 17 3.32131 17 5C17 6.67869 15.9659 8.11585 14.5 8.70924M16 19C16 17.1362 16 16.2044 15.6955 15.4693C15.2895 14.4892 14.5108 13.7105 13.5307 13.3045C12.7956 13 11.8638 13 10 13H7C5.13623 13 4.20435 13 3.46927 13.3045C2.48915 13.7105 1.71046 14.4892 1.30448 15.4693C1 16.2044 1 17.1362 1 19M12.5 5C12.5 7.20914 10.7091 9 8.5 9C6.29086 9 4.5 7.20914 4.5 5C4.5 2.79086 6.29086 1 8.5 1C10.7091 1 12.5 2.79086 12.5 5Z"
+            stroke="white"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>,
+        <svg
+          width="22"
+          key={1}
+          height="20"
+          viewBox="0 0 22 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M21 19V17C21 15.1362 19.7252 13.5701 18 13.126M14.5 1.29076C15.9659 1.88415 17 3.32131 17 5C17 6.67869 15.9659 8.11585 14.5 8.70924M16 19C16 17.1362 16 16.2044 15.6955 15.4693C15.2895 14.4892 14.5108 13.7105 13.5307 13.3045C12.7956 13 11.8638 13 10 13H7C5.13623 13 4.20435 13 3.46927 13.3045C2.48915 13.7105 1.71046 14.4892 1.30448 15.4693C1 16.2044 1 17.1362 1 19M12.5 5C12.5 7.20914 10.7091 9 8.5 9C6.29086 9 4.5 7.20914 4.5 5C4.5 2.79086 6.29086 1 8.5 1C10.7091 1 12.5 2.79086 12.5 5Z"
             stroke="white"
             strokeOpacity="0.64"
             strokeWidth="1.5"

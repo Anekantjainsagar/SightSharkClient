@@ -12,9 +12,6 @@ const Navbar = () => {
         <h3 className="bigFont font-semibold">
           Hello {userData?.client_name},
         </h3>
-        <p className="text-sm min-[1600px]:text-base text-[#85888E]">
-          Here’s your overview of the clients
-        </p>
       </div>
       <div className="relative flex items-center w-[340px] min-[1600px]:w-[500px]">
         <FaSearch className="absolute left-4 z-40 text-white" />{" "}

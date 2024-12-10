@@ -69,9 +69,39 @@ const State = (props) => {
     getTemplates(id);
   }, [userData]);
 
+  const checkPasswordCriteria = (password) => {
+    return {
+      hasUppercase: /[A-Z]/.test(password),
+      hasLowercase: /[a-z]/.test(password),
+      hasNumber: /[0-9]/.test(password),
+      hasSpecialChar: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+    };
+  };
+
+  const password_params = [
+    "hasUppercase",
+    "hasLowercase",
+    "hasNumber",
+    "hasSpecialChar",
+  ];
+  const tooltips = {
+    hasUppercase: "Password must have at least one uppercase letter.",
+    hasLowercase: "Password must have at least one lowercase letter.",
+    hasNumber: "Password must have at least one number.",
+    hasSpecialChar: "Password must have at least one special character.",
+  };
+
   return (
     <Context.Provider
-      value={{ userData, setUserData, checkToken, agency_templates }}
+      value={{
+        userData,
+        setUserData,
+        checkToken,
+        agency_templates,
+        checkPasswordCriteria,
+        password_params,
+        tooltips,
+      }}
     >
       {props.children}
     </Context.Provider>

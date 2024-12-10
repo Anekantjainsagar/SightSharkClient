@@ -38,7 +38,7 @@ const LoginOtp = ({ showSubscribe, setShowSubscribe, email }) => {
       try {
         axios
           .post(
-            `${BACKEND_URI}//client/auth/verify-otp`,
+            `${BACKEND_URI}/client/auth/verify-otp`,
             { email: email.toLowerCase(), otp: parseInt(otpVal) },
             {
               headers: {

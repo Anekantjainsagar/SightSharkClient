@@ -1,9 +1,10 @@
 "use client";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Leftbar from "@/app/Components/Utils/Leftbar";
 import Navbar from "@/app/Components/Utils/Navbar";
 import Image from "next/image";
 import Context from "../Context/Context";
+import UpdateAssign from "../Components/Utils/UpdateAssign";
 
 const Overview = () => {
   const { agency_templates } = useContext(Context);
@@ -27,20 +28,23 @@ const Overview = () => {
                       <div
                         key={i}
                         className="border border-gray-500/20 p-3 rounded-2xl cursor-pointer"
-                        onClick={() => {
-                          window.open(e?.template_link, "__blank");
-                        }}
                       >
                         <Image
                           src={e?.template_image}
                           alt={e?.template_image?.src}
                           width={1000}
                           height={1000}
-                          className="rounded-2xl"
+                          className="rounded-2xl h-[22vh] object-cover"
+                          onClick={() => {
+                            window.open(e?.template_link, "__blank");
+                          }}
                         />
-                        <h4 className="mainText18 font-medium text-center mt-2.5">
-                          {e?.template_name}
-                        </h4>
+                        <div className="mt-3 flex items-center justify-between">
+                          <h4 className="mainText18 font-medium">
+                            {e?.template_name}
+                          </h4>
+                          <SelectingUser />
+                        </div>
                       </div>
                     )
                   );
@@ -49,6 +53,87 @@ const Overview = () => {
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  );
+};
+
+const SelectingUser = () => {
+  const [showSubscribe, setShowSubscribe] = useState(false);
+  const [show, setShow] = useState(false);
+  const dropdownRef = useRef(null);
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setShow(false);
+    }
+  };
+
+  useEffect(() => {
+    if (show) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [show]);
+
+  const toggleDropdown = (e) => {
+    e?.stopPropagation();
+    setShow(!show);
+  };
+
+  return (
+    <div
+      className="relative inline-block text-left"
+      ref={dropdownRef}
+      onClick={(e) => e?.stopPropagation()}
+    >
+      <UpdateAssign
+        showSubscribe={showSubscribe}
+        setShowSubscribe={setShowSubscribe}
+        data={""}
+      />
+      <Image
+        src="https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg"
+        alt="User Icon"
+        width={10000}
+        height={10000}
+        className="w-[35px] aspect-square object-cover rounded-full border border-transparent hover:border-gray-800 transition-all cursor-pointer"
+        onClick={toggleDropdown}
+      />
+
+      {/* Dropdown Content */}
+      <div
+        className={`absolute right-[40px] top-1/2 w-[10vw] -translate-y-1/2 bg-white rounded-md shadow-xl shadow-gray-800 text-gray-700 transition-transform duration-300 ease-in-out ${
+          show ? "scale-100 opacity-100" : "scale-90 opacity-0"
+        }`}
+      >
+        <input
+          type="search"
+          placeholder="Search here..."
+          autoFocus
+          className="border-b outline-none text-sm w-full py-2 px-3 rounded-md"
+        />
+        {[1, 2, 3]?.map((e, i) => (
+          <div
+            key={i}
+            className="flex items-center gap-x-2 px-2 py-1.5 rounded-md hover:bg-gray-300"
+            onClick={() => setShowSubscribe(!showSubscribe)}
+          >
+            <Image
+              src="https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg"
+              alt="User Icon"
+              width={10000}
+              height={10000}
+              className="w-[25px] aspect-square object-cover rounded-full border border-transparent hover:border-gray-800 transition-all"
+            />
+            <p className="font-normal text-sm">Unassigned</p>
+          </div>
+        ))}
       </div>
     </div>
   );
