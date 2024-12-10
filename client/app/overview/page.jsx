@@ -43,7 +43,7 @@ const Overview = () => {
                           <h4 className="mainText18 font-medium">
                             {e?.template_name}
                           </h4>
-                          <SelectingUser />
+                          <SelectingUser data={e} i={i} />
                         </div>
                       </div>
                     )
@@ -58,7 +58,7 @@ const Overview = () => {
   );
 };
 
-const SelectingUser = () => {
+const SelectingUser = ({ data, i }) => {
   const [showSubscribe, setShowSubscribe] = useState(false);
   const [show, setShow] = useState(false);
   const dropdownRef = useRef(null);
@@ -108,7 +108,7 @@ const SelectingUser = () => {
 
       {/* Dropdown Content */}
       <div
-        className={`absolute right-[40px] top-1/2 w-[10vw] -translate-y-1/2 bg-white rounded-md shadow-xl shadow-gray-800 text-gray-700 transition-transform duration-300 ease-in-out ${
+        className={`absolute ${"left-[40px]"} top-1/2 w-[10vw] -translate-y-1/2 bg-main border border-gray-300/50 rounded-md shadow-xl shadow-main text-white transition-transform duration-300 ease-in-out ${
           show ? "scale-100 opacity-100" : "scale-90 opacity-0"
         }`}
       >
@@ -116,12 +116,12 @@ const SelectingUser = () => {
           type="search"
           placeholder="Search here..."
           autoFocus
-          className="border-b outline-none text-sm w-full py-2 px-3 rounded-md"
+          className="border-b border-b-gray-300/50 outline-none bg-main text-white text-sm w-full py-2 px-3 rounded-md"
         />
         {[1, 2, 3]?.map((e, i) => (
           <div
             key={i}
-            className="flex items-center gap-x-2 px-2 py-1.5 rounded-md hover:bg-gray-300"
+            className="flex items-center gap-x-2 px-2 py-1.5 rounded-md hover:bg-gray-700/40 text-gray-300 hover:text-white"
             onClick={() => setShowSubscribe(!showSubscribe)}
           >
             <Image
