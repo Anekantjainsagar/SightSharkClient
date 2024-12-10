@@ -117,7 +117,7 @@ const Settings = () => {
                         />
                         <div
                           className="absolute z-50 top-1/2 -translate-y-1/2 text-white right-5 min-[1600px]:text-2xl text-gl cursor-pointer"
-                          onClick={(e) => {
+                          onClick={() => {
                             setShowOriginalPassword(!showOriginalPassword);
                           }}
                         >
@@ -188,7 +188,7 @@ const Settings = () => {
                         />
                         <div
                           className="absolute z-50 top-1/2 -translate-y-1/2 text-white right-5 min-[1600px]:text-2xl text-gl cursor-pointer"
-                          onClick={(e) => {
+                          onClick={() => {
                             setShowNewPassword(!showNewPassword);
                           }}
                         >
@@ -261,7 +261,7 @@ const Settings = () => {
                         />
                         <div
                           className="absolute z-50 top-1/2 -translate-y-1/2 text-white right-5 min-[1600px]:text-2xl text-gl cursor-pointer"
-                          onClick={(e) => {
+                          onClick={() => {
                             setShowNewPasswordC(!showNewPasswordC);
                           }}
                         >
