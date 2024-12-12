@@ -122,39 +122,41 @@ export default function ResetPassword() {
                 {showPassword ? <LuEye /> : <LuEyeOff />}
               </div>
             </div>{" "}
-            <div className="text-sm mb-5">
-              <p
-                className={
-                  criteria.hasUppercase ? "text-green-500" : "text-red-500"
-                }
-              >
-                {criteria.hasUppercase ? "✔" : "✘"} At least one uppercase
-                letter
-              </p>
-              <p
-                className={
-                  criteria.hasLowercase ? "text-green-500" : "text-red-500"
-                }
-              >
-                {criteria.hasLowercase ? "✔" : "✘"} At least one lowercase
-                letter
-              </p>
-              <p
-                className={
-                  criteria.hasNumber ? "text-green-500" : "text-red-500"
-                }
-              >
-                {criteria.hasNumber ? "✔" : "✘"} At least one number
-              </p>
-              <p
-                className={
-                  criteria.hasSpecialChar ? "text-green-500" : "text-red-500"
-                }
-              >
-                {criteria.hasSpecialChar ? "✔" : "✘"} At least one special
-                character
-              </p>
-            </div>
+            {password && (
+              <div className="text-sm mb-5">
+                <p
+                  className={
+                    criteria.hasUppercase ? "text-green-500" : "text-red-500"
+                  }
+                >
+                  {criteria.hasUppercase ? "✔" : "✘"} At least one uppercase
+                  letter
+                </p>
+                <p
+                  className={
+                    criteria.hasLowercase ? "text-green-500" : "text-red-500"
+                  }
+                >
+                  {criteria.hasLowercase ? "✔" : "✘"} At least one lowercase
+                  letter
+                </p>
+                <p
+                  className={
+                    criteria.hasNumber ? "text-green-500" : "text-red-500"
+                  }
+                >
+                  {criteria.hasNumber ? "✔" : "✘"} At least one number
+                </p>
+                <p
+                  className={
+                    criteria.hasSpecialChar ? "text-green-500" : "text-red-500"
+                  }
+                >
+                  {criteria.hasSpecialChar ? "✔" : "✘"} At least one special
+                  character
+                </p>
+              </div>
+            )}
             <label
               htmlFor="cpassword"
               className="text-sm min-[1600px]:text-base"
