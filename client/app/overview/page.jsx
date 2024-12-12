@@ -59,7 +59,8 @@ const Overview = () => {
 };
 
 const SelectingUser = ({ data, i }) => {
-  const [showSubscribe, setShowSubscribe] = useState(false);
+  const [searchVal, setSearchVal] = useState("");
+  const { allUsers } = useContext(Context);
   const [show, setShow] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -92,11 +93,6 @@ const SelectingUser = ({ data, i }) => {
       ref={dropdownRef}
       onClick={(e) => e?.stopPropagation()}
     >
-      <UpdateAssign
-        showSubscribe={showSubscribe}
-        setShowSubscribe={setShowSubscribe}
-        data={""}
-      />
       <Image
         src="https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg"
         alt="User Icon"
@@ -105,36 +101,67 @@ const SelectingUser = ({ data, i }) => {
         className="w-[35px] aspect-square object-cover rounded-full border border-transparent hover:border-gray-800 transition-all cursor-pointer"
         onClick={toggleDropdown}
       />
-
-      {/* Dropdown Content */}
       <div
-        className={`absolute ${"left-[40px]"} top-1/2 w-[10vw] -translate-y-1/2 bg-main border border-gray-300/50 rounded-md shadow-xl shadow-main text-white transition-transform duration-300 ease-in-out ${
+        className={`absolute ${"left-[40px]"} top-1/2 w-[10vw] small-scroller -translate-y-1/2 bg-main border border-gray-300/50 rounded-md shadow-xl shadow-main text-white transition-transform duration-300 ease-in-out ${
           show ? "scale-100 opacity-100" : "scale-90 opacity-0"
         }`}
       >
         <input
           type="search"
+          value={searchVal}
           placeholder="Search here..."
-          autoFocus
+          onChange={(e) => setSearchVal(e.target.value)}
           className="border-b border-b-gray-300/50 outline-none bg-main text-white text-sm w-full py-2 px-3 rounded-md"
         />
-        {[1, 2, 3]?.map((e, i) => (
-          <div
-            key={i}
-            className="flex items-center gap-x-2 px-2 py-1.5 rounded-md hover:bg-gray-700/40 text-gray-300 hover:text-white"
-            onClick={() => setShowSubscribe(!showSubscribe)}
-          >
-            <Image
-              src="https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg"
-              alt="User Icon"
-              width={10000}
-              height={10000}
-              className="w-[25px] aspect-square object-cover rounded-full border border-transparent hover:border-gray-800 transition-all"
-            />
-            <p className="font-normal text-sm">Unassigned</p>
-          </div>
-        ))}
+        {allUsers
+          ?.filter((e) => {
+            if (searchVal) {
+              return (
+                e?.first_name
+                  ?.toLowerCase()
+                  ?.includes(searchVal.toLowerCase()) ||
+                e?.last_name?.toLowerCase()?.includes(searchVal.toLowerCase())
+              );
+            }
+            return e;
+          })
+          ?.map((e, i) => {
+            return <User e={e} key={i} original_data={data} />;
+          })}
       </div>
+    </div>
+  );
+};
+
+const User = ({ e, original_data }) => {
+  const [showSubscribe, setShowSubscribe] = useState(false);
+
+  return (
+    <div
+      className="flex items-center gap-x-2 px-2 py-1.5 rounded-md hover:bg-gray-700/40 text-gray-300 hover:text-white"
+      onClick={() => {
+        setShowSubscribe(!showSubscribe);
+      }}
+    >
+      <UpdateAssign
+        showSubscribe={showSubscribe}
+        setShowSubscribe={setShowSubscribe}
+        original_data={original_data}
+        user_data={e}
+      />
+      <Image
+        src={
+          e?.profile_picture ||
+          "https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg"
+        }
+        alt="User Icon"
+        width={10000}
+        height={10000}
+        className="w-[25px] aspect-square object-cover rounded-full border border-transparent hover:border-gray-800 transition-all"
+      />
+      <p className="font-normal text-sm">
+        {e?.first_name + " " + e?.last_name}
+      </p>
     </div>
   );
 };

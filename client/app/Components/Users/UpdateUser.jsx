@@ -9,6 +9,7 @@ import { BACKEND_URI } from "@/app/utils/url";
 import { getCookie } from "cookies-next";
 import Context from "@/app/Context/Context";
 import { MdKeyboardArrowDown } from "react-icons/md";
+import axios from "axios";
 
 const customStyles = {
   overlay: { zIndex: 50 },
@@ -30,11 +31,12 @@ const UpdateUser = ({ showSubscribe, setShowSubscribe, userData }) => {
   const context = useContext(Context);
   const { getUsers } = useContext(Context);
   const [page, setPage] = useState(1);
+  const [original_data, setOriginal_data] = useState("");
   const [data, setData] = useState({
     firstName: "",
     lastName: "",
     email: "",
-    access: "admin",
+    access: "guest",
     profile: "",
     phone: "",
     postal_code: "",
@@ -54,20 +56,13 @@ const UpdateUser = ({ showSubscribe, setShowSubscribe, userData }) => {
       lastName: userData?.last_name,
       access: userData?.role,
     });
+    setOriginal_data(userData);
     setFile(userData?.profile_picture);
   }, [userData]);
 
   useEffect(() => {
-    if (context?.userData?.role == "superadmin") {
-      setAvailableRoles(["admin", "guest"]);
-      setData({ ...data, access: "admin" });
-    } else if (context?.userData?.role == "admin") {
-      setAvailableRoles(["guest"]);
-      setData({ ...data, access: "guest" });
-    } else if (context?.userData?.role == "owner") {
-      setAvailableRoles(["superadmin", "admin", "guest"]);
-      setData({ ...data, access: "superadmin" });
-    }
+    setAvailableRoles(["admin", "guest"]);
+    setData({ ...data, access: "admin" });
   }, [context?.userData]);
 
   const handleFileChangeProfile = (event) => {
@@ -82,59 +77,55 @@ const UpdateUser = ({ showSubscribe, setShowSubscribe, userData }) => {
     setShowSubscribe(false);
   }
 
-  const updateUsers = () => {
+  const updateUsers = async () => {
     if (data?.firstName && data?.lastName && data?.email && data?.access) {
-      const queryParams = new URLSearchParams({
-        email: data?.email,
-        password: data?.password,
-        first_name: data?.firstName,
-        last_name: data?.lastName,
-        phone: data?.phone || "",
-        postal_code: data?.postal_code || "",
-        role: data?.access || "admin",
-        country: data?.country || "",
-        status: data?.status || "active",
-      }).toString();
+      const queryParams = {
+        sub_client_id: original_data?.id,
+        first_name: data?.firstName?.toString(),
+        last_name: data?.lastName?.toString(),
+        email: data?.email?.toString(),
+        password: data?.password?.toString(),
+        phone: data?.phone?.toString() || "",
+        profile_picture: "",
+        postal_code: data?.postal_code?.toString() || "",
+        role: data?.access?.toString() || "admin",
+        country: data?.country?.toString() || "",
+        status: data?.status?.toString() || "active",
+        two_factor_authentication: original_data?.two_factor_authentication,
+      };
 
       let formdata = new FormData();
-      if (data?.profile instanceof File || data?.profile instanceof Blob) {
-        formdata.append("profile_picture", data?.profile);
-        formdata.append("profile_picture_filename", data?.profile.name);
-        formdata.append("profile_picture_content_type", data?.profile.type);
-      } else {
-        formdata.append("profile_picture", "");
-        formdata.append("profile_picture_filename", "");
-        formdata.append("profile_picture_content_type", "");
-      }
+      formdata.append("profile_picture", data?.profile || "");
+      formdata.append("profile_picture_filename", data?.profile?.name || "");
+      formdata.append(
+        "profile_picture_content_type",
+        data?.profile?.type || ""
+      );
 
       try {
-        fetch(`${BACKEND_URI}/user/update/${userData?.id}?${queryParams}`, {
-          headers: {
-            Accept:
-              "application/json, application/xml, text/plain, text/html, *.*",
-            Authorization: `Bearer ${getCookie("token")}`,
-          },
-          method: "PUT",
-          body: formdata,
-        })
-          .then((res) => {
-            return res.json();
-          })
-          .then((res) => {
-            if (res.msg) {
-              getUsers();
-              toast.success("User updated successfully");
-              closeModal();
-            }
-            if (res.detail) {
-              toast.error(res.detail);
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+        const response = await axios.post(
+          `${BACKEND_URI}/subclient/sub-clients/update`,
+          formdata,
+          {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${getCookie("token")}`,
+            },
+            params: queryParams,
+          }
+        );
+
+        if (response.data.msg) {
+          getUsers();
+          toast.success("User updated successfully");
+          closeModal();
+        }
+        if (response.data.detail) {
+          toast.error(response.data.detail);
+        }
       } catch (error) {
-        console.log(error);
+        console.error(error);
+        toast.error("An error occurred while updating the user.");
       }
     } else {
       toast.error("Please fill all the details");

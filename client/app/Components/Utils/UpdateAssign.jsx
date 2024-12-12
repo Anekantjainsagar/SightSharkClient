@@ -21,24 +21,33 @@ const customStyles = {
   },
 };
 
-const UpdateAssign = ({ showSubscribe, setShowSubscribe, data }) => {
+const UpdateAssign = ({
+  showSubscribe,
+  setShowSubscribe,
+  original_data,
+  user_data,
+}) => {
   const [val, setVal] = useState("");
   const { setUsers, users } = useContext(Context);
   function closeModal() {
     setShowSubscribe(false);
   }
 
-  const deleteUser = () => {
+  const assignTemplate = () => {
     if (val == `${data?.first_name} ${data?.last_name}`) {
       try {
-        fetch(`${BACKEND_URI}/user/delete/${data?.id}`, {
-          method: "DELETE",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getCookie("token")}`,
-          },
-        })
+        fetch(
+          `${BACKEND_URI}/subclient/sub-clients/${user_data?.id}/access-links/${data?.id}`,
+          {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${getCookie("token")}`,
+            },
+            body: JSON.stringify({ template: [original_data?.template_name] }),
+          }
+        )
           .then((response) => {
             if (!response.ok) {
               throw new Error(`HTTP error! status: ${response.status}`);
@@ -100,7 +109,9 @@ const UpdateAssign = ({ showSubscribe, setShowSubscribe, data }) => {
           </p>
           <p className="mainText18 mb-2 text-[#B2B4BA]">
             Type{" "}
-            <span className="font-semibold text-white">Rishabh Mathur </span>
+            <span className="font-semibold text-white">
+              {user_data?.first_name + " " + user_data?.last_name}{" "}
+            </span>
             to confirm
           </p>
           <input
@@ -122,7 +133,7 @@ const UpdateAssign = ({ showSubscribe, setShowSubscribe, data }) => {
             <button
               className={`bg-[#FAA700] w-full py-1.5 min-[1600px]:py-2 rounded-lg text-center`}
               onClick={() => {
-                deleteUser();
+                assignTemplate();
               }}
             >
               Assign

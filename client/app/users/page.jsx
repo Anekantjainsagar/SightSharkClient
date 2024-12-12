@@ -44,7 +44,7 @@ const Overview = () => {
               <h3 className="text-xl min-[1600px]:text-2xl">
                 Users{" "}
                 <span className="text-lg min-[1600px]:text-xl text-white/80">
-                  ({users?.total_count})
+                  ({users?.total})
                 </span>
               </h3>{" "}
               <div className="flex items-center">
@@ -80,10 +80,8 @@ const Overview = () => {
               </div>
               <div className="h-[68vh] min-[1600px]:h-[70vh]">
                 <div className="overflow-y-auto small-scroller h-[89%]">
-                  {users?.data?.map((e, i) => {
-                    return (
-                      <UserDetailBlock status={"Online"} data={e} key={i} />
-                    );
+                  {users?.sub_clients?.map((e, i) => {
+                    return <UserDetailBlock data={e} key={i} />;
                   })}
                 </div>
                 <div className="h-[10%] min-[1600px]:h-[14%] gap-x-4 px-6 flex items-center justify-center bg-[#030021]/40 rounded-2xl">

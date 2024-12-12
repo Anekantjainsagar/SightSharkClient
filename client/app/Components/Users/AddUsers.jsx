@@ -10,6 +10,7 @@ import { getCookie } from "cookies-next";
 import Context from "@/app/Context/Context";
 import { LuEye, LuEyeOff } from "react-icons/lu";
 import { MdKeyboardArrowDown } from "react-icons/md";
+import axios from "axios";
 
 const customStyles = {
   overlay: { zIndex: 50 },
@@ -48,16 +49,8 @@ const AddUsers = ({ showSubscribe, setShowSubscribe }) => {
   });
 
   useEffect(() => {
-    if (userData?.role == "superadmin") {
-      setAvailableRoles(["admin", "guest"]);
-      setData({ ...data, access: "admin" });
-    } else if (userData?.role == "admin") {
-      setAvailableRoles(["guest"]);
-      setData({ ...data, access: "guest" });
-    } else if (userData?.role == "owner") {
-      setAvailableRoles(["superadmin", "admin", "guest"]);
-      setData({ ...data, access: "superadmin" });
-    }
+    setAvailableRoles(["admin", "guest"]);
+    setData({ ...data, access: "admin" });
   }, [userData]);
 
   const handleFileChangeProfile = (event) => {
@@ -74,7 +67,7 @@ const AddUsers = ({ showSubscribe, setShowSubscribe }) => {
     setShowSubscribe(false);
   }
 
-  const addUsers = () => {
+  const addUsers = async () => {
     if (
       data?.firstName &&
       data?.lastName &&
@@ -82,56 +75,52 @@ const AddUsers = ({ showSubscribe, setShowSubscribe }) => {
       data?.password &&
       data?.access
     ) {
-      const queryParams = new URLSearchParams({
-        email: data?.email,
-        password: data?.password,
-        first_name: data?.firstName,
-        last_name: data?.lastName,
-        phone: data?.phone || "",
-        postal_code: data?.postal_code || "",
-        role: data?.access || "admin",
-        country: data?.country || "",
-        status: data?.status || "active",
-      }).toString();
+      const queryParams = {
+        agency_id: userData?.agency_id,
+        first_name: data?.firstName.toString(),
+        last_name: data?.lastName.toString(),
+        email: data?.email.toString(),
+        password: data?.password.toString(),
+        phone: data?.phone.toString() || "",
+        profile_picture: "",
+        postal_code: data?.postal_code.toString() || "",
+        role: data?.access.toString() || "admin",
+        country: data?.country.toString() || "",
+        status: "active",
+        two_factor_authentication: "disabled",
+      };
 
-      let formdata = new FormData();
-      if (data?.profile instanceof File || data?.profile instanceof Blob) {
-        formdata.append("profile_picture", data?.profile);
-        formdata.append("profile_picture_filename", data?.profile.name);
-        formdata.append("profile_picture_content_type", data?.profile.type);
-      } else {
-        formdata.append("profile_picture", "");
-        formdata.append("profile_picture_filename", "");
-        formdata.append("profile_picture_content_type", "");
-      }
+      let formData = new FormData();
+      formData.append("profile_picture", data?.profile || "");
+      formData.append("profile_picture_filename", data?.profile.name || "");
+      formData.append("profile_picture_content_type", data?.profile.type || "");
 
       try {
-        fetch(`${BACKEND_URI}/user/create?${queryParams}`, {
-          headers: {
-            Accept:
-              "application/json, application/xml, text/plain, text/html, *.*",
-            Authorization: `Bearer ${getCookie("token")}`,
-          },
-          method: "POST",
-          body: formdata,
-        })
-          .then((res) => res.json())
-          .then((res) => {
-            if (res.msg) {
-              toast.success("User created successfully");
-              closeModal();
-              getUsers();
-            } else if (res.detail) {
-              toast.error(res.detail);
-            }
-          })
-          .catch((err) => {
-            console.error("Error creating user:", err);
-            toast.error("An error occurred while creating the user");
-          });
+        const response = await axios.post(
+          `${BACKEND_URI}/subclient/sub-clients`,
+          formData,
+          {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${getCookie("token")}`,
+            },
+            params: queryParams,
+          }
+        );
+
+        if (response.data.msg) {
+          toast.success("User created successfully");
+          closeModal();
+          getUsers();
+        } else if (response.data.detail) {
+          toast.error(response.data.detail);
+        }
       } catch (error) {
-        console.error("Unexpected error:", error);
-        toast.error("An unexpected error occurred");
+        console.error("Error creating user:", error);
+        toast.error(
+          error.response?.data?.detail ||
+            "An error occurred while creating the user"
+        );
       }
     } else {
       toast.error("Please fill all the required details");
@@ -245,7 +234,6 @@ const AddUsers = ({ showSubscribe, setShowSubscribe }) => {
                   Access
                   <Required />
                 </label>
-
                 <div className="relative w-full">
                   <select
                     name="access"

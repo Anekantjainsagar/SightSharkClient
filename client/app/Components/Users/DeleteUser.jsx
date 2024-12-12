@@ -29,9 +29,9 @@ const DeleteUser = ({ showSubscribe, setShowSubscribe, data }) => {
   }
 
   const deleteUser = () => {
-    if (val == `${data?.first_name} ${data?.last_name}`) {
+    if (val.trim() == `${data?.first_name} ${data?.last_name}`) {
       try {
-        fetch(`${BACKEND_URI}/user/delete/${data?.id}`, {
+        fetch(`${BACKEND_URI}/subclient/sub-clients/${data?.id}`, {
           method: "DELETE",
           headers: {
             Accept: "application/json",
@@ -49,10 +49,10 @@ const DeleteUser = ({ showSubscribe, setShowSubscribe, data }) => {
             if (res.msg) {
               setShowSubscribe(false);
               toast.success("User Deleted Successfully");
-              let temp = users?.data?.filter((e) => {
+              let temp = users?.sub_clients?.filter((e) => {
                 return e?.id != data?.id;
               });
-              setUsers({ ...users, data: temp });
+              setUsers({ ...users, sub_clients: temp });
             }
           })
           .catch((err) => {
@@ -97,10 +97,10 @@ const DeleteUser = ({ showSubscribe, setShowSubscribe, data }) => {
             Are you sure you want to delete the User?
           </h4>
           <p className="bg-[#171C2A] p-3 text-[#ECECED] w-full text-center text-sm min-[1600px]:text-base my-2.5">
-            The user’s access to the app will be revoked.
+            The user&apos;s access to the app will be revoked.
           </p>
           <p className="text-[#B2B4BA] text-sm min-[1600px]:text-base my-2">
-            This action can’t be undone.
+            This action can&apos;t be undone.
           </p>
           <p className="mainText18 mb-2 text-[#B2B4BA]">
             Type{" "}
