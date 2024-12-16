@@ -58,7 +58,7 @@ const Overview = () => {
   );
 };
 
-const SelectingUser = ({ data, i }) => {
+const SelectingUser = ({ data }) => {
   const [searchVal, setSearchVal] = useState("");
   const { allUsers } = useContext(Context);
   const [show, setShow] = useState(false);
