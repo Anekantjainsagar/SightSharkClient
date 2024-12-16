@@ -35,9 +35,9 @@ const PasswordReset = ({ showSubscribe, setShowSubscribe }) => {
 
     if (timeLeft <= 0) {
       setTimeLeft(null); // Stop the timer
-      if (onComplete) {
-        setSent(false);
-      }
+      // if (onComplete) {
+      setSent(false);
+      // }
       return;
     }
 
@@ -116,7 +116,7 @@ const PasswordReset = ({ showSubscribe, setShowSubscribe }) => {
                       if (res.status == 200) {
                         toast.success("Password reset email sent");
                         setSent(true);
-                        setTimeLeft(5 * 60);
+                        setTimeLeft(2 * 60);
                       }
                     })
                     .catch((err) => {

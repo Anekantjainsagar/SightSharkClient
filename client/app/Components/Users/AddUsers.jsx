@@ -97,7 +97,7 @@ const AddUsers = ({ showSubscribe, setShowSubscribe }) => {
 
       try {
         const response = await axios.post(
-          `${BACKEND_URI}/subclient/sub-clients`,
+          `${BACKEND_URI}/subclient/create`,
           formData,
           {
             headers: {

@@ -94,7 +94,7 @@ const State = (props) => {
       try {
         axios
           .get(
-            `${BACKEND_URI}/subclient/sub-clients/search?page=${page}&page_size=${limit}&sort_by=${order_by}&sort_order=${
+            `${BACKEND_URI}/subclient/search?page=${page}&page_size=${limit}&sort_by=${order_by}&sort_order=${
               type ? "asc" : "desc"
             }&search=${""}`,
             {
@@ -124,7 +124,7 @@ const State = (props) => {
       try {
         axios
           .get(
-            `${BACKEND_URI}/subclient/sub-clients/search?page=1&page_size=${
+            `${BACKEND_URI}/subclient/search?page=1&page_size=${
               users?.total
             }&sort_by=${"created_at"}&sort_order=${"asc"}&search=${""}`,
             {

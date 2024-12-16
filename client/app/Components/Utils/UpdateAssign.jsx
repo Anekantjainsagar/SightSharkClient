@@ -83,7 +83,12 @@ const UpdateAssign = ({
         onRequestClose={closeModal}
         style={customStyles}
       >
-        <div className="relative rounded-lg bg-[#0C111D] py-6 border border-gray-500/40 px-4 text-white flex flex-col items-center justify-center">
+        <div
+          className="relative rounded-lg bg-[#0C111D] py-6 border border-gray-500/40 px-4 text-white flex flex-col items-center justify-center"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
           <div className="bg-[#FEE4E2] w-16 aspect-square rounded-full flex items-center justify-center">
             <svg
               width="41"
