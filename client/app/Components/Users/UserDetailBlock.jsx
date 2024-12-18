@@ -3,11 +3,13 @@ import React, { useContext, useEffect, useState } from "react";
 import DeleteUser from "./DeleteUser";
 import UpdateUser from "./UpdateUser";
 import Context from "@/app/Context/Context";
+import ShowReportsAssigned from "@/app/Components/Users/ShowReportsAssigned";
 
 const UserDetailBlock = ({ data }) => {
   const { userData } = useContext(Context);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [showUpdatePopup, setShowUpdatePopup] = useState(false);
+  const [showReportsPopup, setShowReportsPopup] = useState(false);
   const [userClickedData, setUserClickedData] = useState();
 
   useEffect(() => {
@@ -25,6 +27,11 @@ const UserDetailBlock = ({ data }) => {
         showSubscribe={showUpdatePopup}
         setShowSubscribe={setShowUpdatePopup}
         userData={userClickedData}
+      />
+      <ShowReportsAssigned
+        showSubscribe={showReportsPopup}
+        setShowSubscribe={setShowReportsPopup}
+        data={data}
       />
       <div className="py-4 px-7 border-gray-200/5 border-y grid userBlockGrid items-center cursor-pointer text-textGrey text-sm min-[1600px]:text-base">
         <div className="flex items-start min-[1600px]:ml-0 ml-2">
@@ -66,11 +73,22 @@ const UserDetailBlock = ({ data }) => {
           </div>
         </div>
         <p className="text-center">
-          {new Date(data?.created_at).toString().slice(4, 21)}
-        </p>
-        <p className="text-center">
           {new Date(data?.last_online).toString().slice(4, 21)}
         </p>
+        <div className="text-center">
+          {data?.report_ids ? (
+            <p
+              onClick={() => {
+                setShowReportsPopup(true);
+              }}
+              className="hover:underline transition-all hover:text-blue-400"
+            >
+              View Report
+            </p>
+          ) : (
+            <p className="text-gray-400">No Report is Assigned</p>
+          )}
+        </div>
         <div className="flex items-center justify-end">
           {userData?.role != "guest" && (
             <div className="mr-4">

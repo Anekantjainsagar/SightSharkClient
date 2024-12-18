@@ -99,7 +99,6 @@ input[type="number"] {
 }
 
 .userBlockGrid {
-  /* grid-template-columns: 3% 25% 16% 18% 15% 18% 4%; */
   grid-template-columns: 21% 17% 19% 16% 19% 7%;
 }
 

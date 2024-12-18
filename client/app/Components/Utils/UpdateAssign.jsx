@@ -1,10 +1,10 @@
 "use client";
-import React, { useContext, useState } from "react";
 import Modal from "react-modal";
-import toast, { Toaster } from "react-hot-toast";
 import { getCookie } from "cookies-next";
-import { BACKEND_URI } from "@/app/utils/url";
 import Context from "@/app/Context/Context";
+import { BACKEND_URI } from "@/app/utils/url";
+import toast, { Toaster } from "react-hot-toast";
+import React, { useContext, useState } from "react";
 
 const customStyles = {
   overlay: { zIndex: 50 },
@@ -36,6 +36,8 @@ const UpdateAssign = ({
 
   const assignTemplate = () => {
     if (val?.trim() == `${user_data?.first_name} ${user_data?.last_name}`) {
+      let assignedReports = user_data?.report_ids?.map((e) => e?.report_id);
+
       try {
         fetch(
           `${BACKEND_URI}/subclient/${user_data?.id}/update-access-links-ids`,
@@ -46,7 +48,10 @@ const UpdateAssign = ({
               "Content-Type": "application/json",
               Authorization: `Bearer ${getCookie("token")}`,
             },
-            body: JSON.stringify([original_data?.report_id]),
+            body: JSON.stringify([
+              ...assignedReports,
+              original_data?.report_id,
+            ]),
           }
         )
           .then((response) => {
@@ -60,6 +65,7 @@ const UpdateAssign = ({
               setShowSubscribe(false);
               toast.success(res?.msg);
               getReport(userData?.agency_id);
+              getUsers();
             }
           })
           .catch((err) => {

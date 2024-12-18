@@ -62,22 +62,26 @@ const Overview = () => {
               </div>
               <div className="min-[1600px]:mt-5 mt-4 border border-gray-200/5 rounded-2xl">
                 <div className="grid bg-[#030021]/40 py-4 px-7 userBlockGrid items-center rounded-2xl">
-                  {["Name", "Access", "Status", "Joined", "Last Online"].map(
-                    (e, i) => {
-                      return (
-                        <h5
-                          key={i}
-                          className={`text-[13px] min-[1600px]:text-base font-light tracking-wider ${
-                            e?.includes("Name")
-                              ? "min-[1600px]:ml-0 ml-2"
-                              : "text-center"
-                          }`}
-                        >
-                          {e}
-                        </h5>
-                      );
-                    }
-                  )}
+                  {[
+                    "Name",
+                    "Access",
+                    "Status",
+                    "Last Online",
+                    "Reports Assigned",
+                  ].map((e, i) => {
+                    return (
+                      <h5
+                        key={i}
+                        className={`text-[13px] min-[1600px]:text-base font-light tracking-wider ${
+                          e?.includes("Name")
+                            ? "min-[1600px]:ml-0 ml-2"
+                            : "text-center"
+                        }`}
+                      >
+                        {e}
+                      </h5>
+                    );
+                  })}
                 </div>
                 <div className="h-[68vh] min-[1600px]:h-[70vh]">
                   <div className="overflow-y-auto small-scroller h-[89%]">

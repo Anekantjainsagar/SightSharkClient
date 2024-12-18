@@ -4,9 +4,11 @@ import Context from "./Context";
 import axios from "axios";
 import { BACKEND_URI } from "../utils/url";
 import { getCookie } from "cookies-next";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const State = (props) => {
+  const history = useRouter()
   const pathname = usePathname();
   const [users, setUsers] = useState();
   const [userData, setUserData] = useState();
@@ -141,7 +143,7 @@ const State = (props) => {
   }, [users]);
 
   useEffect(() => {
-    if (pathname == "/" && userData?.id) {
+    if (pathname == "/" && userData?.email_address) {
       history.push("/overview");
       toast.success("Logged in Successfully");
     }

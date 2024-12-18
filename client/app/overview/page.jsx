@@ -44,7 +44,7 @@ const Overview = () => {
                             {e?.report_name}
                           </h4>
                           {userData?.platform_name && (
-                            <SelectingUser data={e} i={i} />
+                            <SelectingUser data={e} i={i} idx={i + 1} />
                           )}
                         </div>
                       </div>
@@ -60,7 +60,7 @@ const Overview = () => {
   );
 };
 
-const SelectingUser = ({ data }) => {
+const SelectingUser = ({ data, idx }) => {
   const [searchVal, setSearchVal] = useState("");
   const { allUsers } = useContext(Context);
   const [show, setShow] = useState(false);
@@ -96,26 +96,69 @@ const SelectingUser = ({ data }) => {
       ref={dropdownRef}
       onClick={(e) => e?.stopPropagation()}
     >
-      <Image
-        src={
-          data?.assigned_users?.length > 0
-            ? allUsers?.find((e) => e?.id === data?.assigned_users[0])
-                ?.profile_picture?.length > 0
-              ? allUsers?.find((e) => e?.id === data?.assigned_users[0])
-                  ?.profile_picture
-              : "https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg"
-            : "https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg"
-        }
-        alt="User Icon"
-        width={10000}
-        height={10000}
-        className="w-[35px] aspect-square object-cover rounded-full border border-transparent hover:border-gray-800 transition-all cursor-pointer"
-        onClick={toggleDropdown}
-      />
+      <div onClick={toggleDropdown}>
+        {data?.assigned_users?.length > 0 ? (
+          <div
+            className={`flex items-center relative h-[35px]`}
+            style={{
+              width:
+                data?.assigned_users?.length == 1
+                  ? "35px"
+                  : `${data?.assigned_users?.length * 19}px`,
+            }}
+          >
+            {data?.assigned_users?.map((id, i) => {
+              return (
+                allUsers?.find((e) => e?.id === id)?.profile_picture && (
+                  <Image
+                    key={i}
+                    src={
+                      allUsers?.find((e) => e?.id === id)?.profile_picture
+                        ?.length > 0
+                        ? allUsers?.find((e) => e?.id === id)?.profile_picture
+                        : "https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg"
+                    }
+                    alt="User Icon"
+                    width={10000}
+                    height={10000}
+                    className={`w-[35px] absolute bottom-0 border border-white aspect-square object-cover rounded-full transition-all cursor-pointer`}
+                    style={{ right: `${i * 15}px` }}
+                  />
+                )
+              );
+            })}
+          </div>
+        ) : (
+          <Image
+            src={
+              "https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg"
+            }
+            alt="User Icon"
+            width={10000}
+            height={10000}
+            className="w-[35px] aspect-square object-cover rounded-full border border-transparent hover:border-gray-800 transition-all cursor-pointer"
+          />
+        )}
+      </div>
       <div
-        className={`absolute ${"left-[40px]"} top-1/2 w-[10vw] small-scroller -translate-y-1/2 bg-main border border-gray-300/50 rounded-md shadow-xl shadow-main text-white transition-transform duration-300 ease-in-out ${
+        className={`absolute top-1/2 w-[10vw] h-[15vh] overflow-y-auto small-scroller -translate-y-1/2 bg-main border border-gray-300/50 rounded-md shadow-xl shadow-main text-white transition-transform duration-300 ease-in-out ${
           show ? "scale-100 opacity-100" : "scale-90 opacity-0"
         }`}
+        style={
+          idx % 4 !== 0
+            ? {
+                left:
+                  data?.assigned_users?.length <= 1
+                    ? "45px"
+                    : `${data?.assigned_users?.length * 21}px`,
+              }
+            : {
+                right:
+                  data?.assigned_users?.length <= 1
+                    ? "45px"
+                    : `${data?.assigned_users?.length * 21}px`,
+              }
+        }
       >
         <input
           type="search"
@@ -155,24 +198,17 @@ const SelectingUser = ({ data }) => {
 };
 
 const User = ({ e, original_data, toggleDropdown }) => {
-  const { allUsers } = useContext(Context);
-  const [user, setUser] = useState();
   const [showSubscribe, setShowSubscribe] = useState(false);
-
-  useEffect(() => {
-    if (original_data?.assigned_users?.length > 0) {
-      setUser(allUsers?.find((e) => e?.id == original_data?.assigned_users[0]));
-    }
-  }, [original_data]);
 
   return (
     <div
       className={`flex items-center ${
-        user?.id === e?.id && "bg-gray-700/70"
+        original_data?.assigned_users?.includes(e?.id) && "bg-gray-700/70"
       } gap-x-2 px-2 py-1.5 rounded-md hover:bg-gray-700/40 text-gray-300 hover:text-white`}
       onClick={() => {
         if (e?.first_name !== "Unassigned") {
           setShowSubscribe(!showSubscribe);
+        } else {
         }
         toggleDropdown();
       }}
