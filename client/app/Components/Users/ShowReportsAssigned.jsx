@@ -3,7 +3,7 @@ import Modal from "react-modal";
 import { getCookie } from "cookies-next";
 import Context from "@/app/Context/Context";
 import { BACKEND_URI } from "@/app/utils/url";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import React, { useContext } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 
@@ -66,7 +66,6 @@ const ShowReportsAssigned = ({ showSubscribe, setShowSubscribe, data }) => {
 
   return (
     <div className="z-50">
-      <Toaster />
       <Modal
         isOpen={showSubscribe}
         onRequestClose={closeModal}

@@ -3,7 +3,7 @@ import Modal from "react-modal";
 import { getCookie } from "cookies-next";
 import Context from "@/app/Context/Context";
 import { BACKEND_URI } from "@/app/utils/url";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import React, { useContext, useState } from "react";
 
 const customStyles = {
@@ -81,7 +81,6 @@ const UpdateAssign = ({
 
   return (
     <div className="z-50">
-      <Toaster />
       <Modal
         isOpen={showSubscribe}
         onRequestClose={closeModal}

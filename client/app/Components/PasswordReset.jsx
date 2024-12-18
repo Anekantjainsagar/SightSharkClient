@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { AiOutlineClose } from "react-icons/ai";
 import axios from "axios";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { BACKEND_URI } from "../utils/url";
 import { getCookie } from "cookies-next";
 
@@ -52,7 +52,6 @@ const PasswordReset = ({ showSubscribe, setShowSubscribe }) => {
   };
   return (
     <div className="z-50">
-      <Toaster />
       <Modal
         isOpen={showSubscribe}
         onRequestCl2ose={closeModal}

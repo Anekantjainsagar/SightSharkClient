@@ -2,7 +2,6 @@
 import Modal from "react-modal";
 import Image from "next/image";
 import { AiOutlineClose } from "react-icons/ai";
-import { Toaster } from "react-hot-toast";
 import { useContext } from "react";
 import Context from "@/app/Context/Context";
 
@@ -28,7 +27,6 @@ const HelpPage = ({ showSubscribe, setShowSubscribe }) => {
 
   return (
     <div className="z-50">
-      <Toaster />
       <Modal
         isOpen={showSubscribe}
         onRequestCl2ose={closeModal}
