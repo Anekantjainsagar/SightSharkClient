@@ -4,7 +4,7 @@ import { getCookie } from "cookies-next";
 import Context from "@/app/Context/Context";
 import { BACKEND_URI } from "@/app/utils/url";
 import toast, { Toaster } from "react-hot-toast";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 
 const customStyles = {
@@ -23,9 +23,46 @@ const customStyles = {
 };
 
 const ShowReportsAssigned = ({ showSubscribe, setShowSubscribe, data }) => {
+  const { getReport, getUsers, userData } = useContext(Context);
   function closeModal() {
     setShowSubscribe(false);
   }
+
+  const removeAssignTemplate = (remove_id) => {
+    let assignedReports = data?.report_ids?.map((e) => e?.report_id);
+    assignedReports = assignedReports?.filter((e) => e != remove_id);
+
+    try {
+      fetch(`${BACKEND_URI}/subclient/${data?.id}/update-access-links-ids`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getCookie("token")}`,
+        },
+        body: JSON.stringify([...assignedReports]),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((res) => {
+          if (res.msg) {
+            setShowSubscribe(false);
+            toast.success(res?.msg);
+            getReport(userData?.agency_id);
+            getUsers();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="z-50">
@@ -57,6 +94,7 @@ const ShowReportsAssigned = ({ showSubscribe, setShowSubscribe, data }) => {
                 <AiOutlineClose
                   className="cursor-pointer text-red-200 hover:text-red-400 transition-all"
                   onClick={() => {
+                    removeAssignTemplate(e?.report_id);
                     setShowSubscribe(false);
                   }}
                 />

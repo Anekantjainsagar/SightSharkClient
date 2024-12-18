@@ -34,6 +34,16 @@ const App = () => {
     setUser({ email, password });
   }, []);
 
+    useEffect(() => {
+    // Getting access token if google
+    const url = new URL(window.location.href);
+    const tokenFromUrl = url.searchParams.get("access_token");
+    if (tokenFromUrl?.length > 0) {
+      setCookie("token", tokenFromUrl);
+      checkToken();
+    }
+  }, []);
+
   const onLogin = () => {
     if (user?.email && user?.password) {
       if (rememberMe) {
@@ -217,10 +227,10 @@ const App = () => {
             <div className="items-stretch flex flex-col gap-y-3">
               <button
                 onClick={() => {
-                  window.open(`${BACKEND_URI}/auth/google/login`, "__blank");
-                  // axios.get(`${BACKEND_URI}/auth/google/login`).then((res) => {
-                  //   console.log(res);
-                  // });
+                  window.open(
+                    `${BACKEND_URI}/clientauth/google/login`,
+                    "__blank"
+                  );
                 }}
                 className="w-full bg-[#898989]/15 rounded-[10px] flex items-center justify-center h-12"
               >
