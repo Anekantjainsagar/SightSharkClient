@@ -5,9 +5,11 @@ import Navbar from "@/app/Components/Utils/Navbar";
 import Image from "next/image";
 import Context from "../Context/Context";
 import UpdateAssign from "../Components/Utils/UpdateAssign";
+import { useRouter } from "next/navigation";
 
 const Overview = () => {
-  const { agency_templates, userData } = useContext(Context);
+  const history = useRouter();
+  const { agency_templates, userData, setLinkToEmbed } = useContext(Context);
 
   return (
     <div className="flex items-start h-[100vh]">
@@ -36,7 +38,8 @@ const Overview = () => {
                           height={1000}
                           className="rounded-2xl h-[22vh] object-cover"
                           onClick={() => {
-                            window.open(e?.report_link, "__blank");
+                            setLinkToEmbed(e?.report_link);
+                            history.push("/view-report");
                           }}
                         />
                         <div className="mt-3 flex items-center justify-between">

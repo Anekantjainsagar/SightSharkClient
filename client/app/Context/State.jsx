@@ -8,12 +8,13 @@ import { usePathname, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 const State = (props) => {
-  const history = useRouter()
+  const history = useRouter();
   const pathname = usePathname();
   const [users, setUsers] = useState();
   const [userData, setUserData] = useState();
   const [allUsers, setAllUsers] = useState([]);
   const [agency_templates, setAgency_templates] = useState();
+  const [linkToEmbed, setLinkToEmbed] = useState("");
 
   const checkToken = () => {
     let cookie = getCookie("token");
@@ -186,6 +187,8 @@ const State = (props) => {
         users,
         allUsers,
         setUsers,
+        setLinkToEmbed,
+        linkToEmbed,
       }}
     >
       {props.children}
