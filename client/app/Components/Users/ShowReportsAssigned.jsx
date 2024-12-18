@@ -81,7 +81,7 @@ const ShowReportsAssigned = ({ showSubscribe, setShowSubscribe, data }) => {
           <h4 className="min-[1600px]:text-xl mb-2 text-center font-semibold">
             Assigned Reports to {data?.first_name}
           </h4>
-          {data?.report_ids?.map((e, i, arr) => {
+          {data?.report_ids?.map((e, i) => {
             return (
               <div
                 key={i}

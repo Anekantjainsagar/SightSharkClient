@@ -99,7 +99,7 @@ const Settings = () => {
                 }
                 throw new Error("Failed to update password");
               })
-              .then((res) => {
+              .then(() => {
                 toast.success("Password Changed Successfully");
                 setData({
                   oldPass: "",

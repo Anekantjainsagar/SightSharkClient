@@ -34,7 +34,7 @@ const App = () => {
     setUser({ email, password });
   }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     // Getting access token if google
     const url = new URL(window.location.href);
     const tokenFromUrl = url.searchParams.get("access_token");
