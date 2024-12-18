@@ -51,7 +51,7 @@ const Settings = () => {
               },
             }
           )
-          .then((res) => {
+          .then(() => {
             if (res.status === 200) {
               // Update state after the successful response
               setUserData({
