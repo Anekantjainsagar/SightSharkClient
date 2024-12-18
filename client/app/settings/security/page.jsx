@@ -32,44 +32,94 @@ const Settings = () => {
   }, [userData]);
 
   const toggle2factorAuth = (checked) => {
-    let cookie = getCookie("token");
-    if (cookie && userData?.client_id) {
-      axios
-        .put(
-          `${BACKEND_URI}/client/two-factor-authentication?client_id=${userData?.client_id.trim()}&two_factor_authentication=${
-            checked ? "enabled" : "disabled"
-          }`,
-          {}, // empty object for the data (payload) since it's a PUT without a body
-          {
-            headers: {
-              Accept: "application/json",
-              Authorization: `Bearer ${cookie}`,
-            },
-          }
-        )
-        .then((res) => {
-          if (res.status === 200) {
-            // Update state after the successful response
-            setUserData({
-              ...userData,
-              two_factor_authentication: checked ? "enabled" : "disabled",
-            });
-            setTwoFactorAuth(checked); // update local state
-
-            // Show success message
-            if (checked) {
-              toast.success("Two Factor Authentication Enabled");
-            } else {
-              toast.success("Two Factor Authentication Disabled");
+    if (
+      (checked && userData?.two_factor_authentication == "disabled") ||
+      (!checked && userData?.two_factor_authentication == "enabled")
+    ) {
+      let cookie = getCookie("token");
+      if (cookie && userData?.client_id) {
+        axios
+          .put(
+            `${BACKEND_URI}/client/two-factor-authentication?client_id=${userData?.client_id.trim()}&two_factor_authentication=${
+              checked ? "enabled" : "disabled"
+            }`,
+            {}, // empty object for the data (payload) since it's a PUT without a body
+            {
+              headers: {
+                Accept: "application/json",
+                Authorization: `Bearer ${cookie}`,
+              },
             }
+          )
+          .then((res) => {
+            if (res.status === 200) {
+              // Update state after the successful response
+              setUserData({
+                ...userData,
+                two_factor_authentication: checked ? "enabled" : "disabled",
+              });
+              setTwoFactorAuth(checked); // update local state
+
+              // Show success message
+              if (checked) {
+                toast.success("Two Factor Authentication Enabled");
+              } else {
+                toast.success("Two Factor Authentication Disabled");
+              }
+            }
+          })
+          .catch((err) => {
+            console.error(err);
+            toast.error("Error enabling/disabling Two Factor Authentication");
+          });
+      } else {
+        toast.error("Login Error");
+      }
+    }
+  };
+
+  const updatePassword = () => {
+    if (data?.oldPass && data?.newPassword && data?.reNewPassword) {
+      if (data?.newPassword === data?.reNewPassword) {
+        if (data?.oldPass !== data?.newPassword) {
+          try {
+            fetch(
+              `${BACKEND_URI}/client/update-password?old_password=${data?.oldPass}&new_password=${data?.newPassword}`,
+              {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${getCookie("token")}`,
+                },
+              }
+            )
+              .then((response) => {
+                if (response.ok) {
+                  return response.json();
+                }
+                throw new Error("Failed to update password");
+              })
+              .then((res) => {
+                toast.success("Password Changed Successfully");
+                setData({
+                  oldPass: "",
+                  newPassword: "",
+                  reNewPassword: "",
+                });
+              })
+              .catch((err) => {
+                toast.error("Internal Server Error");
+                console.error(err);
+              });
+          } catch (err) {
+            console.error(err);
           }
-        })
-        .catch((err) => {
-          console.error(err);
-          toast.error("Error enabling/disabling Two Factor Authentication");
-        });
-    } else {
-      toast.error("Login Error");
+        } else {
+          toast.error("New & Old Password Should not Match!!");
+        }
+      } else {
+        toast.error("Both New Password Should Match!!");
+      }
     }
   };
 
@@ -279,6 +329,7 @@ const Settings = () => {
                   className={`bg-newBlue font-semibold min-[1600px]:w-[160px] w-[120px] min-[1600px]:py-3 py-2 min-[1600px]:text-base text-sm rounded-xl ml-4`}
                   onClick={() => {
                     toggle2factorAuth(twoFactorAuth);
+                    updatePassword();
                   }}
                 >
                   Save

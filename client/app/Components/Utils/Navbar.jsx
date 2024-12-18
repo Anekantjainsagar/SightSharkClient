@@ -10,7 +10,7 @@ const Navbar = () => {
     <div className="text-white py-4 flex items-center justify-between w-full px-6">
       <div>
         <h3 className="bigFont font-semibold">
-          Hello {userData?.client_name},
+          Hello {userData?.client_name || userData?.first_name},
         </h3>
       </div>
       <div className="relative flex items-center w-[340px] min-[1600px]:w-[500px]">

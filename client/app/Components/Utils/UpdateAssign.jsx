@@ -28,16 +28,17 @@ const UpdateAssign = ({
   user_data,
 }) => {
   const [val, setVal] = useState("");
-  const { setUsers, users } = useContext(Context);
+  const { getReport, userData } = useContext(Context);
+
   function closeModal() {
     setShowSubscribe(false);
   }
 
   const assignTemplate = () => {
-    if (val == `${data?.first_name} ${data?.last_name}`) {
+    if (val?.trim() == `${user_data?.first_name} ${user_data?.last_name}`) {
       try {
         fetch(
-          `${BACKEND_URI}/subclient/sub-clients/${user_data?.id}/access-links/${data?.id}`,
+          `${BACKEND_URI}/subclient/${user_data?.id}/update-access-links-ids`,
           {
             method: "POST",
             headers: {
@@ -45,7 +46,7 @@ const UpdateAssign = ({
               "Content-Type": "application/json",
               Authorization: `Bearer ${getCookie("token")}`,
             },
-            body: JSON.stringify({ template: [original_data?.template_name] }),
+            body: JSON.stringify([original_data?.report_id]),
           }
         )
           .then((response) => {
@@ -57,11 +58,8 @@ const UpdateAssign = ({
           .then((res) => {
             if (res.msg) {
               setShowSubscribe(false);
-              toast.success("User Deleted Successfully");
-              let temp = users?.data?.filter((e) => {
-                return e?.id != data?.id;
-              });
-              setUsers({ ...users, data: temp });
+              toast.success(res?.msg);
+              getReport(userData?.agency_id);
             }
           })
           .catch((err) => {
@@ -107,7 +105,7 @@ const UpdateAssign = ({
             </svg>
           </div>
           <h4 className="min-[1600px]:text-xl mt-5 text-center">
-            Are you sure you are assigning template to this User?
+            Are you sure you are assigning report to this User?
           </h4>
           <p className="bg-[#171C2A] p-3 text-[#ECECED] w-full text-center text-sm min-[1600px]:text-base my-2.5">
             The user&apos;s access to the app will be assigned.

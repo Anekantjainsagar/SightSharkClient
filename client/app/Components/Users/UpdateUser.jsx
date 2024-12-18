@@ -104,7 +104,7 @@ const UpdateUser = ({ showSubscribe, setShowSubscribe, userData }) => {
 
       try {
         const response = await axios.post(
-          `${BACKEND_URI}/subclient/sub-clients/update`,
+          `${BACKEND_URI}/subclient/update`,
           formdata,
           {
             headers: {

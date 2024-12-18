@@ -31,7 +31,7 @@ const DeleteUser = ({ showSubscribe, setShowSubscribe, data }) => {
   const deleteUser = () => {
     if (val.trim() == `${data?.first_name} ${data?.last_name}`) {
       try {
-        fetch(`${BACKEND_URI}/subclient/sub-clients/${data?.id}`, {
+        fetch(`${BACKEND_URI}/subclient/${data?.id}`, {
           method: "DELETE",
           headers: {
             Accept: "application/json",

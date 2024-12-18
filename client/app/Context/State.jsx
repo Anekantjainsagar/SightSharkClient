@@ -2,12 +2,14 @@
 import React, { useEffect, useState } from "react";
 import Context from "./Context";
 import axios from "axios";
-import { ADMIN_BACKEND_URI, BACKEND_URI } from "../utils/url";
+import { BACKEND_URI } from "../utils/url";
 import { getCookie } from "cookies-next";
+import { usePathname } from "next/navigation";
 
 const State = (props) => {
-  const [userData, setUserData] = useState();
+  const pathname = usePathname();
   const [users, setUsers] = useState();
+  const [userData, setUserData] = useState();
   const [allUsers, setAllUsers] = useState([]);
   const [agency_templates, setAgency_templates] = useState();
 
@@ -35,31 +37,6 @@ const State = (props) => {
     }
   };
 
-  const getTemplates = (id) => {
-    let cookie = getCookie("token");
-    setAgency_templates([]);
-    if (cookie?.length > 5 && id) {
-      try {
-        axios
-          .get(`${ADMIN_BACKEND_URI}/template/templates?agency_id=${id}`, {
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${cookie}`,
-            },
-          })
-          .then((res) => {
-            setAgency_templates(res.data.templates);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
-
   const getReport = (id) => {
     let cookie = getCookie("token");
     setAgency_templates([]);
@@ -67,7 +44,7 @@ const State = (props) => {
     if (cookie?.length > 5 && id) {
       try {
         axios
-          .get(`${BACKEND_URI}/client/get-reports?client_id=${id}`, {
+          .get(`${BACKEND_URI}/client/get-reports`, {
             headers: {
               Accept: "application/json",
               "Content-Type": "application/json",
@@ -75,7 +52,7 @@ const State = (props) => {
             },
           })
           .then((res) => {
-            console.log(res.data);
+            setAgency_templates(res.data.data);
           })
           .catch((err) => {
             console.log(err);
@@ -155,7 +132,6 @@ const State = (props) => {
     let id = userData?.agency_id
       ? userData?.agency_id
       : "6521d442-4378-44ec-a305-f55c2aca9b23";
-    getTemplates(id);
     getReport(id);
     getUsers(1);
   }, [userData]);
@@ -163,6 +139,13 @@ const State = (props) => {
   useEffect(() => {
     getAllUsers();
   }, [users]);
+
+  useEffect(() => {
+    if (pathname == "/" && userData?.id) {
+      history.push("/overview");
+      toast.success("Logged in Successfully");
+    }
+  }, [userData]);
 
   const checkPasswordCriteria = (password) => {
     return {
@@ -189,6 +172,7 @@ const State = (props) => {
   return (
     <Context.Provider
       value={{
+        getReport,
         userData,
         setUserData,
         checkToken,

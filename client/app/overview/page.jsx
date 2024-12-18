@@ -7,7 +7,7 @@ import Context from "../Context/Context";
 import UpdateAssign from "../Components/Utils/UpdateAssign";
 
 const Overview = () => {
-  const { agency_templates } = useContext(Context);
+  const { agency_templates, userData } = useContext(Context);
 
   return (
     <div className="flex items-start h-[100vh]">
@@ -19,9 +19,9 @@ const Overview = () => {
         <div className="absolute backdrop-blur-3xl top-0 left-0 w-full h-full px-5 overflow-y-auto">
           <Navbar />
           <div className="text-white w-full px-6">
-            <div className="text-white w-full rounded-xl p-3 min-[1600px]:p-4 bg-[#171C2A]/20 border border-gray-500/5 mt-6">
+            <div className="text-white w-full rounded-xl p-3 min-[1600px]:p-4 overflow-y-auto h-[84vh] small-scroller overflow-x-hidden bg-[#171C2A]/20 border border-gray-500/5 mt-6">
               <h3 className="text-[20px]">Dashboards</h3>
-              <div className="grid grid-cols-4 gap-x-4 mt-3 min-[1600px]:mt-4">
+              <div className="grid grid-cols-4 gap-4 mt-3 min-[1600px]:mt-4">
                 {agency_templates?.map((e, i) => {
                   return (
                     e?.template_image && (
@@ -36,14 +36,16 @@ const Overview = () => {
                           height={1000}
                           className="rounded-2xl h-[22vh] object-cover"
                           onClick={() => {
-                            window.open(e?.template_link, "__blank");
+                            window.open(e?.report_link, "__blank");
                           }}
                         />
                         <div className="mt-3 flex items-center justify-between">
                           <h4 className="mainText18 font-medium">
-                            {e?.template_name}
+                            {e?.report_name}
                           </h4>
-                          <SelectingUser data={e} i={i} />
+                          {userData?.platform_name && (
+                            <SelectingUser data={e} i={i} />
+                          )}
                         </div>
                       </div>
                     )
@@ -84,6 +86,7 @@ const SelectingUser = ({ data }) => {
 
   const toggleDropdown = (e) => {
     e?.stopPropagation();
+    setSearchVal("");
     setShow(!show);
   };
 
@@ -94,7 +97,15 @@ const SelectingUser = ({ data }) => {
       onClick={(e) => e?.stopPropagation()}
     >
       <Image
-        src="https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg"
+        src={
+          data?.assigned_users?.length > 0
+            ? allUsers?.find((e) => e?.id === data?.assigned_users[0])
+                ?.profile_picture?.length > 0
+              ? allUsers?.find((e) => e?.id === data?.assigned_users[0])
+                  ?.profile_picture
+              : "https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg"
+            : "https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg"
+        }
         alt="User Icon"
         width={10000}
         height={10000}
@@ -113,7 +124,10 @@ const SelectingUser = ({ data }) => {
           onChange={(e) => setSearchVal(e.target.value)}
           className="border-b border-b-gray-300/50 outline-none bg-main text-white text-sm w-full py-2 px-3 rounded-md"
         />
-        {allUsers
+        {[
+          { profile_picture: "", first_name: "Unassigned", last_name: "" },
+          ...allUsers,
+        ]
           ?.filter((e) => {
             if (searchVal) {
               return (
@@ -126,21 +140,41 @@ const SelectingUser = ({ data }) => {
             return e;
           })
           ?.map((e, i) => {
-            return <User e={e} key={i} original_data={data} />;
+            return (
+              <User
+                e={e}
+                key={i}
+                original_data={data}
+                toggleDropdown={toggleDropdown}
+              />
+            );
           })}
       </div>
     </div>
   );
 };
 
-const User = ({ e, original_data }) => {
+const User = ({ e, original_data, toggleDropdown }) => {
+  const { allUsers } = useContext(Context);
+  const [user, setUser] = useState();
   const [showSubscribe, setShowSubscribe] = useState(false);
+
+  useEffect(() => {
+    if (original_data?.assigned_users?.length > 0) {
+      setUser(allUsers?.find((e) => e?.id == original_data?.assigned_users[0]));
+    }
+  }, [original_data]);
 
   return (
     <div
-      className="flex items-center gap-x-2 px-2 py-1.5 rounded-md hover:bg-gray-700/40 text-gray-300 hover:text-white"
+      className={`flex items-center ${
+        user?.id === e?.id && "bg-gray-700/70"
+      } gap-x-2 px-2 py-1.5 rounded-md hover:bg-gray-700/40 text-gray-300 hover:text-white`}
       onClick={() => {
-        setShowSubscribe(!showSubscribe);
+        if (e?.first_name !== "Unassigned") {
+          setShowSubscribe(!showSubscribe);
+        }
+        toggleDropdown();
       }}
     >
       <UpdateAssign
